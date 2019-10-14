@@ -252,7 +252,7 @@ int main(int argc, char* argv[])
 				{
 					if (netcode_server_client_connected(server, i))
 					{
-						netcode_server_send_packet(server, 0, sequence, SEQUENCE_SIZE);
+						netcode_server_send_packet(server, i, sequence, SEQUENCE_SIZE);
 					}
 				}
 
