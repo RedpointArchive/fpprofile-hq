@@ -213,8 +213,16 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      cd build && make && ls -la && ls -la fpprofile && file fpprofile
+      cd build && make
     displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile
+    displayName: Display Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1804_GCC_x86_64'
+      publishLocation: 'Container'
 - job: Ubuntu_1604_GCC_x86_64
   displayName: "Ubuntu 16.04, GCC, x86_64"
   pool:
@@ -224,8 +232,16 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      cd build && make && ls -la && ls -la fpprofile && file fpprofile
+      cd build && make
     displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile
+    displayName: Display Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1604_GCC_x86_64'
+      publishLocation: 'Container'
 - job: Ubuntu_1604_GCC_ARM
   displayName: "Ubuntu 16.04, GCC, ARM"
   pool:
@@ -238,8 +254,16 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      cd build && make && ls -la && ls -la fpprofile && file fpprofile
+      cd build && make
     displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile
+    displayName: Display Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1604_GCC_ARM'
+      publishLocation: 'Container'
 
 # macOS variants
 
