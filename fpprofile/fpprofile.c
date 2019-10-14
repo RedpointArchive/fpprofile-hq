@@ -236,11 +236,6 @@ int main(int argc, char* argv[])
 	int valid_sequences = 0;
 	int invalid_sequences = 0;
 
-	if (is_client)
-	{
-		printf("starting...");
-	}
-
 	while (!quit)
 	{
 		if (is_server)
@@ -282,14 +277,14 @@ int main(int argc, char* argv[])
 				{
 					invalid_sequences++;
 
-					printf("\ndeterministic floating point sequence failed, got local result %f with remote result %f\n", local_result, remote_result);
+					printf("deterministic floating point sequence failed, got local result %f with remote result %f\n\n", local_result, remote_result);
 				}
 				else
 				{
 					valid_sequences++;
 				}
 
-				printf("\rsequences valid: %i invalid: %i", valid_sequences, invalid_sequences);
+				printf("sequences valid: %i invalid: %i\n", valid_sequences, invalid_sequences);
 
 				netcode_client_free_packet(client, packet);
 			}
