@@ -293,17 +293,28 @@ int main(int argc, char* argv[])
 
 				netcode_client_free_packet(client, packet);
 			}
+
+			if (!is_server)
+			{
+				if (valid_sequences + invalid_sequences > 1000)
+				{
+					if (invalid_sequences > 0)
+					{
+						// at least one failure, exit with failure
+						return 1;
+					}
+					else
+					{
+						return 0;
+					}
+				}
+			}
 		}
 
 		netcode_sleep(delta_time);
 
 		time += delta_time;
 	}
-
-	float a = 5.0f;
-	float b = 6.0f / a;
-	float c = tan(b);
-
-	printf("%f\n", c);
+	
 	return 0;
 }

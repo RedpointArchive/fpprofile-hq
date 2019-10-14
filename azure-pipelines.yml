@@ -23,6 +23,9 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -42,6 +45,9 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -100,6 +106,9 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -119,6 +128,9 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -177,6 +189,9 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -196,6 +211,9 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -218,6 +236,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -282,6 +303,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -304,6 +328,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -368,6 +395,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -390,6 +420,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
     displayName: Validate Binary Architecture
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -409,6 +442,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
     displayName: Validate Binary Architecture
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
