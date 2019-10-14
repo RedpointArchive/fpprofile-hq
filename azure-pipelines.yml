@@ -248,11 +248,11 @@ jobs:
     vmImage: 'ubuntu-16.04'
   steps:
   - script: |
-      sudo apt install -y gcc make gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi
+      sudo apt install -y gcc make g++-arm-linux-gnueabi gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi
     displayName: Install ARM toolchain
   - task: CMake@1
     inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-gcc ..
+      cmakeArgs: -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-g++ ..
   - script: |
       cd build && make
     displayName: Make
@@ -270,11 +270,11 @@ jobs:
     vmImage: 'ubuntu-16.04'
   steps:
   - script: |
-      sudo apt install -y gcc make gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+      sudo apt install -y gcc make g++-aarch64-linux-gnu gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
     displayName: Install ARM toolchain
   - task: CMake@1
     inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc ..
+      cmakeArgs: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ..
   - script: |
       cd build && make
     displayName: Make
