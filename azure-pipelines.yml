@@ -216,7 +216,7 @@ jobs:
       cd build && make
     displayName: Make
   - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64 TEST'
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
   - task: PublishBuildArtifacts@1
     inputs:
@@ -376,25 +376,41 @@ jobs:
 
 # macOS variants
 
-- job: macOS_1014
-  displayName: "macOS 10.14"
+- job: macOS_1014_Clang_x86_64
+  displayName: "macOS 10.14, Clang, x86_64"
   pool:
     vmImage: 'macOS-10.14'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: ..
+      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
   - script: |
       cd build && make
     displayName: Make
-- job: macOS_1013
-  displayName: "macOS 10.13"
+  - script: |
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
+    displayName: Validate Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'macOS_1014_Clang_x86_64'
+      publishLocation: 'Container'
+- job: macOS_1013_Clang_x86_64
+  displayName: "macOS 10.13, Clang, x86_64"
   pool:
     vmImage: 'macOS-10.13'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: ..
+      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
   - script: |
       cd build && make
     displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
+    displayName: Validate Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'macOS_1013_Clang_x86_64'
+      publishLocation: 'Container'
