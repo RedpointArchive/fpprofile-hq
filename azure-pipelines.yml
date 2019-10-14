@@ -252,7 +252,7 @@ jobs:
   steps:
   - script: |
       sudo apt install -y gcc make g++-aarch64-linux-gnu gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
-    displayName: Install ARM toolchain
+    displayName: Install ARM64 toolchain
   - task: CMake@1
     inputs:
       cmakeArgs: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ..
@@ -266,6 +266,26 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'Ubuntu_1804_GCC_ARM64'
+      publishLocation: 'Container'
+
+- job: Ubuntu_1804_Clang_x86_64
+  displayName: "Ubuntu 18.04, Clang, x86_64"
+  pool:
+    vmImage: 'ubuntu-18.04'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+  - script: |
+      cd build && make
+    displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile
+    displayName: Display Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1804_Clang_x86_64'
       publishLocation: 'Container'
 
 # Ubuntu 16.04 variants
@@ -318,7 +338,7 @@ jobs:
   steps:
   - script: |
       sudo apt install -y gcc make g++-aarch64-linux-gnu gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
-    displayName: Install ARM toolchain
+    displayName: Install ARM64 toolchain
   - task: CMake@1
     inputs:
       cmakeArgs: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ..
@@ -332,6 +352,26 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'Ubuntu_1604_GCC_ARM64'
+      publishLocation: 'Container'
+
+- job: Ubuntu_1604_Clang_x86_64
+  displayName: "Ubuntu 16.04, Clang, x86_64"
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+  - script: |
+      cd build && make
+    displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile
+    displayName: Display Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1604_Clang_x86_64'
       publishLocation: 'Container'
 
 # macOS variants
