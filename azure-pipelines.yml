@@ -87,7 +87,7 @@ jobs:
     displayName: Install libsodium
   - task: CMake@1
     inputs:
-      cmakeArgs: -G ..
+      cmakeArgs: ..
   - script: |
       cd build && make
     displayName: Make
@@ -101,7 +101,7 @@ jobs:
     displayName: Install libsodium
   - task: CMake@1
     inputs:
-      cmakeArgs: -G ..
+      cmakeArgs: ..
   - script: |
       cd build && make
     displayName: Make
