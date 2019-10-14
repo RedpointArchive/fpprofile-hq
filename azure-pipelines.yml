@@ -87,12 +87,10 @@ jobs:
     displayName: Install libsodium
   - task: CMake@1
     inputs:
-      cmakeArgs: -G Xcode ..
-  - task: Xcode@5
-    inputs:
-      actions: 'build'
-      scheme: 'fpprofile'
-      packageApp: false
+      cmakeArgs: -G ..
+  - script: |
+      cd build && make
+    displayName: Make
 - job: macOS_1013
   displayName: "macOS 10.13"
   pool:
@@ -103,9 +101,7 @@ jobs:
     displayName: Install libsodium
   - task: CMake@1
     inputs:
-      cmakeArgs: -G Xcode ..
-  - task: Xcode@5
-    inputs:
-      actions: 'build'
-      scheme: 'fpprofile'
-      packageApp: false
+      cmakeArgs: -G ..
+  - script: |
+      cd build && make
+    displayName: Make
