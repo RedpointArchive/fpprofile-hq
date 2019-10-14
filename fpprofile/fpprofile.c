@@ -305,6 +305,31 @@ int main(int argc, char* argv[])
 					}
 				}
 			}
+
+			if (netcode_client_state(client) <= NETCODE_CLIENT_STATE_DISCONNECTED)
+			{
+				if (!is_server)
+				{
+					if (valid_sequences + invalid_sequences <= 1000)
+					{
+						// we are exiting due to disconnection, before we are ready to exit
+						printf("unexpected disconnection, exited before collecting data, automatic failure\n");
+						exitCode = 2;
+						quit = 1;
+					}
+					else
+					{
+						printf("unexpected disconnection, but got enough data\n");
+					}
+				}
+				else
+				{
+					printf("unexpected disconnection while also running as a server, exiting\n");
+					quit = 1;
+				}
+
+				break;
+			}
 		}
 
 		netcode_sleep(delta_time);
