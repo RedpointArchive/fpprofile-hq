@@ -9,7 +9,7 @@
 #include <math.h>
 #include <inttypes.h>
 #include <signal.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <memory.h>
 #include <stdbool.h>
 
