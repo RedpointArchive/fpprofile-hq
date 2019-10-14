@@ -153,6 +153,7 @@ jobs:
       configuration: 'RelWithDebInfo'
 - job: Windows_2012R2_VS2015_ARM
   displayName: "Windows 2012 R2, VS 2015, ARM"
+  condition: "false" # No-one should really be targeting 2015 ARM (this is like, original Windows 8 ARM devices).
   pool:
     vmImage: 'vs2015-win2012r2'
   steps:
