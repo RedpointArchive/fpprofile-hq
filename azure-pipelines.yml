@@ -252,7 +252,7 @@ jobs:
     displayName: Install ARM toolchain
   - task: CMake@1
     inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-g++ ..
+      cmakeArgs: -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-gcc ..
   - script: |
       cd build && make
     displayName: Make
