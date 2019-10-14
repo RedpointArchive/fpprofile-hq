@@ -204,8 +204,8 @@ jobs:
 
 # Ubuntu variants
 
-- job: Ubuntu_1804_GCC_x64
-  displayName: "Ubuntu 18.04"
+- job: Ubuntu_1804_GCC_x86_64
+  displayName: "Ubuntu 18.04, GCC, x86_64"
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
@@ -213,10 +213,10 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      cd build && make && file fpprofile
+      cd build && make && ls -la && ls -la fpprofile && file fpprofile
     displayName: Make
-- job: Ubuntu_1604_GCC_x64
-  displayName: "Ubuntu 16.04"
+- job: Ubuntu_1604_GCC_x86_64
+  displayName: "Ubuntu 16.04, GCC, x86_64"
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
@@ -224,10 +224,10 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      cd build && make && file fpprofile
+      cd build && make && ls -la && ls -la fpprofile && file fpprofile
     displayName: Make
 - job: Ubuntu_1604_GCC_ARM
-  displayName: "Ubuntu 16.04"
+  displayName: "Ubuntu 16.04, GCC, ARM"
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
@@ -238,7 +238,7 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      cd build && make && file fpprofile
+      cd build && make && ls -la && ls -la fpprofile && file fpprofile
     displayName: Make
 
 # macOS variants
