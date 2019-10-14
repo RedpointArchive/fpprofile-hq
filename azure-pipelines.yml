@@ -79,6 +79,8 @@ jobs:
   - script: |
       brew install libsodium
     displayName: Install libsodium
+  - script: |
+      cmake --help
   - task: CMake@1
     inputs:
       cmakeArgs: ..
@@ -95,6 +97,8 @@ jobs:
   - script: |
       brew install libsodium
     displayName: Install libsodium
+  - script: |
+      cmake --help
   - task: CMake@1
     inputs:
       cmakeArgs: ..
