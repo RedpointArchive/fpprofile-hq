@@ -8,7 +8,7 @@ trigger:
 
 jobs:
 - job: Windows_2019_VS2019_x64
-  displayName: "Windows Server 2019, Visual Studio 2019, x64"
+  displayName: "Windows 2019, VS 2019, x64"
   pool:
     vmImage: 'windows-2019'
   steps:
@@ -22,7 +22,7 @@ jobs:
       platform: 'x64'
       configuration: 'RelWithDebInfo'
 - job: Windows_2016_VS2017_x64
-  displayName: "Windows Server 2016, Visual Studio 2017, x64"
+  displayName: "Windows 2016, VS 2017, x64"
   pool:
     vmImage: 'vs2017-win2016'
   steps:
@@ -36,7 +36,7 @@ jobs:
       platform: 'x64'
       configuration: 'RelWithDebInfo'
 - job: Windows_2012R2_VS2015_x64
-  displayName: "Windows Server 2012 R2, Visual Studio 2015, x64"
+  displayName: "Windows 2012 R2, VS 2015, x64"
   pool:
     vmImage: 'vs2015-win2012r2'
   steps:
