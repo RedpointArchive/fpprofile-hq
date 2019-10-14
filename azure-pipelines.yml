@@ -82,6 +82,10 @@ jobs:
   - task: CMake@1
     inputs:
       cmakeArgs: ..
+  - task: Xcode@5
+    inputs:
+      actions: 'build'
+      packageApp: false
 - job: macOS_1013
   pool:
     vmImage: 'macOS-10.13'
@@ -92,3 +96,7 @@ jobs:
   - task: CMake@1
     inputs:
       cmakeArgs: ..
+  - task: Xcode@5
+    inputs:
+      actions: 'build'
+      packageApp: false
