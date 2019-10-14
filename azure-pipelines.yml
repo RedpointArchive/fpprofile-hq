@@ -244,6 +244,28 @@ jobs:
   - script: |
       build/fpprofile/fpprofile 103.31.113.109:40000
     displayName: Run against Test Server
+- job: Ubuntu_1804_GCC_x86_64_no80387
+  displayName: "Ubuntu 18.04, GCC, x86_64, -mno-80387"
+  pool:
+    vmImage: 'ubuntu-18.04'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -DCMAKE_C_FLAGS=-mno-80387 -DCMAKE_CXX_FLAGS=-mno-80387 ..
+  - script: |
+      cd build && make
+    displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
+    displayName: Validate Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1804_GCC_x86_64_no80387'
+      publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
 - job: Ubuntu_1804_GCC_ARM
   displayName: "Ubuntu 18.04, GCC, ARM"
   pool:
@@ -311,6 +333,28 @@ jobs:
   - script: |
       build/fpprofile/fpprofile 103.31.113.109:40000
     displayName: Run against Test Server
+- job: Ubuntu_1804_Clang_x86_64_no80387
+  displayName: "Ubuntu 18.04, Clang, x86_64, -mno-80387"
+  pool:
+    vmImage: 'ubuntu-18.04'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_FLAGS=-mno-80387 -DCMAKE_CXX_FLAGS=-mno-80387 ..
+  - script: |
+      cd build && make
+    displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
+    displayName: Validate Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1804_Clang_x86_64_no80387'
+      publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
 
 # Ubuntu 16.04 variants
 
@@ -332,6 +376,28 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'Ubuntu_1604_GCC_x86_64'
+      publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
+- job: Ubuntu_1604_GCC_x86_64_no80387
+  displayName: "Ubuntu 16.04, GCC, x86_64, -mno-80387"
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -DCMAKE_C_FLAGS=-mno-80387 -DCMAKE_CXX_FLAGS=-mno-80387 ..
+  - script: |
+      cd build && make
+    displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
+    displayName: Validate Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1604_GCC_x86_64_no80387'
       publishLocation: 'Container'
   - script: |
       build/fpprofile/fpprofile 103.31.113.109:40000
@@ -399,6 +465,28 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'Ubuntu_1604_Clang_x86_64'
+      publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
+- job: Ubuntu_1604_Clang_x86_64_no80387
+  displayName: "Ubuntu 16.04, Clang, x86_64, -mno-80387"
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_FLAGS=-mno-80387 -DCMAKE_CXX_FLAGS=-mno-80387 ..
+  - script: |
+      cd build && make
+    displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
+    displayName: Validate Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1604_Clang_x86_64_no80387'
       publishLocation: 'Container'
   - script: |
       build/fpprofile/fpprofile 103.31.113.109:40000
