@@ -82,6 +82,8 @@ jobs:
   - task: CMake@1
     inputs:
       cmakeArgs: ..
+  - script: |
+      cd build && ls -la
   - task: Xcode@5
     inputs:
       actions: 'build'
@@ -96,6 +98,8 @@ jobs:
   - task: CMake@1
     inputs:
       cmakeArgs: ..
+  - script: |
+      cd build && ls -la
   - task: Xcode@5
     inputs:
       actions: 'build'
