@@ -13,46 +13,46 @@ jobs:
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: 
+      cmakeArgs: .
 - job: Windows_2016_VS2017
   pool:
     vmImage: 'vs2017-win2016'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: 
+      cmakeArgs: .
 - job: Windows_2012R2_VS2015
   pool:
     vmImage: 'vs2015-win2012r2'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: 
+      cmakeArgs: .
 - job: Ubuntu_1804_GCC
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: 
+      cmakeArgs: .
 - job: Ubuntu_1604_GCC
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: 
+      cmakeArgs: .
 - job: macOS_1014
   pool:
     vmImage: 'macOS-10.14'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: 
+      cmakeArgs: .
 - job: macOS_1013
   pool:
     vmImage: 'macOS-10.13'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: 
+      cmakeArgs: .
