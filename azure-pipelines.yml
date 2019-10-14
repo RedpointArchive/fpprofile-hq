@@ -7,7 +7,8 @@ trigger:
 - master
 
 jobs:
-- job: Windows_2019_VS2019
+- job: Windows_2019_VS2019_x64
+  displayName: "Windows Server 2019, Visual Studio 2019, x64"
   pool:
     vmImage: 'windows-2019'
   steps:
@@ -20,7 +21,8 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
-- job: Windows_2016_VS2017
+- job: Windows_2016_VS2017_x64
+  displayName: "Windows Server 2016, Visual Studio 2017, x64"
   pool:
     vmImage: 'vs2017-win2016'
   steps:
@@ -33,7 +35,8 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
-- job: Windows_2012R2_VS2015
+- job: Windows_2012R2_VS2015_x64
+  displayName: "Windows Server 2012 R2, Visual Studio 2015, x64"
   pool:
     vmImage: 'vs2015-win2012r2'
   steps:
@@ -47,6 +50,7 @@ jobs:
       platform: 'x64'
       configuration: 'RelWithDebInfo'
 - job: Ubuntu_1804_GCC
+  displayName: "Ubuntu 18.04"
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
@@ -60,6 +64,7 @@ jobs:
       cd build && make
     displayName: Make
 - job: Ubuntu_1604_GCC
+  displayName: "Ubuntu 16.04"
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
@@ -73,6 +78,7 @@ jobs:
       cd build && make
     displayName: Make
 - job: macOS_1014
+  displayName: "macOS 10.14"
   pool:
     vmImage: 'macOS-10.14'
   steps:
@@ -88,6 +94,7 @@ jobs:
       scheme: 'fpprofile'
       packageApp: false
 - job: macOS_1013
+  displayName: "macOS 10.13"
   pool:
     vmImage: 'macOS-10.13'
   steps:
