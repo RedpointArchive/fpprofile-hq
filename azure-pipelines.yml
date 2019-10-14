@@ -23,6 +23,11 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2019_VS2019_Win32'
+      publishLocation: 'Container'
 - job: Windows_2019_VS2019_x64
   displayName: "Windows 2019, VS 2019, x64"
   pool:
@@ -37,6 +42,11 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2019_VS2019_x64'
+      publishLocation: 'Container'
 - job: Windows_2019_VS2019_ARM
   displayName: "Windows 2019, VS 2019, ARM"
   pool:
@@ -50,6 +60,11 @@ jobs:
       solution: 'build/*.sln'
       platform: 'ARM'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2019_VS2019_ARM'
+      publishLocation: 'Container'
 - job: Windows_2019_VS2019_ARM64
   displayName: "Windows 2019, VS 2019, ARM64"
   pool:
@@ -64,6 +79,11 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'ARM64'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2019_VS2019_ARM64'
+      publishLocation: 'Container'
 
 # Visual Studio 2017 variants
 
@@ -80,6 +100,11 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2016_VS2017_Win32'
+      publishLocation: 'Container'
 - job: Windows_2016_VS2017_x64
   displayName: "Windows 2016, VS 2017, x64"
   pool:
@@ -94,6 +119,11 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2016_VS2017_x64'
+      publishLocation: 'Container'
 - job: Windows_2016_VS2017_ARM
   displayName: "Windows 2016, VS 2017, ARM"
   pool:
@@ -107,6 +137,11 @@ jobs:
       solution: 'build/*.sln'
       platform: 'ARM'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2016_VS2017_ARM'
+      publishLocation: 'Container'
 - job: Windows_2016_VS2017_ARM64
   displayName: "Windows 2016, VS 2017, ARM64"
   pool:
@@ -121,6 +156,11 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'ARM64'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2016_VS2017_ARM64'
+      publishLocation: 'Container'
 
 # Visual Studio 2015 variants
 
@@ -137,6 +177,11 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2012R2_VS2015_Win32'
+      publishLocation: 'Container'
 - job: Windows_2012R2_VS2015_x64
   displayName: "Windows 2012 R2, VS 2015, x64"
   pool:
@@ -151,6 +196,11 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
+      ArtifactName: 'Windows_2012R2_VS2015_x64'
+      publishLocation: 'Container'
 
 # Ubuntu variants
 
