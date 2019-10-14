@@ -14,6 +14,12 @@ jobs:
   - task: CMake@1
     inputs:
       cmakeArgs: ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      msbuildArchitecture: 'x64'
+      platform: 'x86'
+      configuration: 'Release'
 - job: Windows_2016_VS2017
   pool:
     vmImage: 'vs2017-win2016'
@@ -21,6 +27,12 @@ jobs:
   - task: CMake@1
     inputs:
       cmakeArgs: ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      msbuildArchitecture: 'x64'
+      platform: 'x86'
+      configuration: 'Release'
 - job: Windows_2012R2_VS2015
   pool:
     vmImage: 'vs2015-win2012r2'
@@ -28,6 +40,12 @@ jobs:
   - task: CMake@1
     inputs:
       cmakeArgs: ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      msbuildArchitecture: 'x64'
+      platform: 'x86'
+      configuration: 'Release'
 - job: Ubuntu_1804_GCC
   pool:
     vmImage: 'ubuntu-18.04'
