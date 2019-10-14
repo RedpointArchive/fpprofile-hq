@@ -204,7 +204,7 @@ jobs:
 
 # Ubuntu variants
 
-- job: Ubuntu_1804_GCC
+- job: Ubuntu_1804_GCC_x64
   displayName: "Ubuntu 18.04"
   pool:
     vmImage: 'ubuntu-18.04'
@@ -213,9 +213,9 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      cd build && make
+      cd build && make && file fpprofile
     displayName: Make
-- job: Ubuntu_1604_GCC
+- job: Ubuntu_1604_GCC_x64
   displayName: "Ubuntu 16.04"
   pool:
     vmImage: 'ubuntu-16.04'
@@ -224,7 +224,21 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      cd build && make
+      cd build && make && file fpprofile
+    displayName: Make
+- job: Ubuntu_1604_GCC_ARM
+  displayName: "Ubuntu 16.04"
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - script: |
+      sudo apt install -y gcc make gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi
+    displayName: Install ARM toolchain
+  - task: CMake@1
+    inputs:
+      cmakeArgs: ..
+  - script: |
+      cd build && make && file fpprofile
     displayName: Make
 
 # macOS variants
