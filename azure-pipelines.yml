@@ -39,7 +39,7 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      make
+      cd build && make
     displayName: Make
 - job: Ubuntu_1604_GCC
   pool:
@@ -52,7 +52,7 @@ jobs:
     inputs:
       cmakeArgs: ..
   - script: |
-      make
+      cd build && make
     displayName: Make
 - job: macOS_1014
   pool:
