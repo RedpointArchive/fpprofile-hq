@@ -13,39 +13,39 @@ jobs:
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: ..
+      cmakeArgs: -G "Visual Studio 16 2019" -A x64 ..
   - task: MSBuild@1
     inputs:
       solution: 'build/*.sln'
       msbuildArchitecture: 'x64'
-      platform: 'x86'
-      configuration: 'Release'
+      platform: 'x64'
+      configuration: 'RelWithDebInfo'
 - job: Windows_2016_VS2017
   pool:
     vmImage: 'vs2017-win2016'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: ..
+      cmakeArgs: -G "Visual Studio 15 2017 Win64" ..
   - task: MSBuild@1
     inputs:
       solution: 'build/*.sln'
       msbuildArchitecture: 'x64'
-      platform: 'x86'
-      configuration: 'Release'
+      platform: 'x64'
+      configuration: 'RelWithDebInfo'
 - job: Windows_2012R2_VS2015
   pool:
     vmImage: 'vs2015-win2012r2'
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: ..
+      cmakeArgs: -G "Visual Studio 14 2015 Win64" ..
   - task: MSBuild@1
     inputs:
       solution: 'build/*.sln'
       msbuildArchitecture: 'x64'
-      platform: 'x86'
-      configuration: 'Release'
+      platform: 'x64'
+      configuration: 'RelWithDebInfo'
 - job: Ubuntu_1804_GCC
   pool:
     vmImage: 'ubuntu-18.04'
