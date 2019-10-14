@@ -7,6 +7,9 @@ trigger:
 - master
 
 jobs:
+
+# Visual Studio 2019 variants
+
 - job: Windows_2019_VS2019_Win32
   displayName: "Windows 2019, VS 2019, Win32"
   pool:
@@ -61,6 +64,22 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'ARM64'
       configuration: 'RelWithDebInfo'
+
+# Visual Studio 2017 variants
+
+- job: Windows_2016_VS2017_Win32
+  displayName: "Windows 2016, VS 2017, Win32"
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -G "Visual Studio 15 2017" -A Win32 ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      platform: 'Win32'
+      configuration: 'RelWithDebInfo'
 - job: Windows_2016_VS2017_x64
   displayName: "Windows 2016, VS 2017, x64"
   pool:
@@ -68,12 +87,55 @@ jobs:
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: -G "Visual Studio 15 2017 Win64" ..
+      cmakeArgs: -G "Visual Studio 15 2017" -A x64 ..
   - task: MSBuild@1
     inputs:
       solution: 'build/*.sln'
       msbuildArchitecture: 'x64'
       platform: 'x64'
+      configuration: 'RelWithDebInfo'
+- job: Windows_2016_VS2017_ARM
+  displayName: "Windows 2016, VS 2017, ARM"
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -G "Visual Studio 15 2017" -A ARM ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      platform: 'ARM'
+      configuration: 'RelWithDebInfo'
+- job: Windows_2016_VS2017_ARM64
+  displayName: "Windows 2016, VS 2017, ARM64"
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -G "Visual Studio 15 2017" -A ARM64 ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      msbuildArchitecture: 'x64'
+      platform: 'ARM64'
+      configuration: 'RelWithDebInfo'
+
+# Visual Studio 2015 variants
+
+- job: Windows_2012R2_VS2015_Win32
+  displayName: "Windows 2012 R2, VS 2015, Win32"
+  pool:
+    vmImage: 'vs2015-win2012r2'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -G "Visual Studio 14 2015" -A Win32 ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      platform: 'Win32'
       configuration: 'RelWithDebInfo'
 - job: Windows_2012R2_VS2015_x64
   displayName: "Windows 2012 R2, VS 2015, x64"
@@ -82,13 +144,29 @@ jobs:
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: -G "Visual Studio 14 2015 Win64" ..
+      cmakeArgs: -G "Visual Studio 14 2015" -A x64 ..
   - task: MSBuild@1
     inputs:
       solution: 'build/*.sln'
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+- job: Windows_2012R2_VS2015_ARM
+  displayName: "Windows 2012 R2, VS 2015, ARM"
+  pool:
+    vmImage: 'vs2015-win2012r2'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -G "Visual Studio 14 2015" -A ARM ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      platform: 'ARM'
+      configuration: 'RelWithDebInfo'
+
+# Ubuntu variants
+
 - job: Ubuntu_1804_GCC
   displayName: "Ubuntu 18.04"
   pool:
@@ -117,6 +195,9 @@ jobs:
   - script: |
       cd build && make
     displayName: Make
+
+# macOS variants
+
 - job: macOS_1014
   displayName: "macOS 10.14"
   pool:
