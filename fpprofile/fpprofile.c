@@ -23,6 +23,7 @@ static uint8_t private_key[NETCODE_KEY_BYTES] = { 0x60, 0x6a, 0xbe, 0x6e, 0xc9, 
 												  0x6b, 0x3c, 0x60, 0xf4, 0xb7, 0x15, 0xab, 0xa1 };
 
 static volatile int quit = 0;
+static volatile int exitCode = 0;
 
 void interrupt_handler(int signal)
 {
@@ -172,6 +173,8 @@ int main(int argc, char* argv[])
 
 	if (is_server)
 	{
+		netcode_log_level(NETCODE_LOG_LEVEL_INFO);
+
 		printf("acting as server\n");
 
 		struct netcode_server_config_t server_config;
@@ -293,14 +296,12 @@ int main(int argc, char* argv[])
 			{
 				if (valid_sequences + invalid_sequences > 1000)
 				{
+					quit = 1;
+
 					if (invalid_sequences > 0)
 					{
 						// at least one failure, exit with failure
-						return 1;
-					}
-					else
-					{
-						return 0;
+						exitCode = 1;
 					}
 				}
 			}
@@ -310,6 +311,28 @@ int main(int argc, char* argv[])
 
 		time += delta_time;
 	}
-	
-	return 0;
+
+	if (is_client)
+	{
+		netcode_client_disconnect(client);
+
+		while (netcode_client_state(client) == NETCODE_CLIENT_STATE_CONNECTED)
+		{
+			netcode_client_update(client, time);
+		}
+	}
+
+	if (is_server)
+	{
+		netcode_server_destroy(server);
+	}
+
+	if (is_client)
+	{
+		netcode_client_destroy(client);
+	}
+
+	netcode_term();
+
+	return exitCode;
 }
