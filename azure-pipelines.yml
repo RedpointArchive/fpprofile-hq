@@ -7,6 +7,19 @@ trigger:
 - master
 
 jobs:
+- job: Windows_2019_VS2019_Win32
+  displayName: "Windows 2019, VS 2019, Win32"
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -G "Visual Studio 16 2019" -A Win32 ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      platform: 'Win32'
+      configuration: 'RelWithDebInfo'
 - job: Windows_2019_VS2019_x64
   displayName: "Windows 2019, VS 2019, x64"
   pool:
@@ -20,6 +33,33 @@ jobs:
       solution: 'build/*.sln'
       msbuildArchitecture: 'x64'
       platform: 'x64'
+      configuration: 'RelWithDebInfo'
+- job: Windows_2019_VS2019_ARM
+  displayName: "Windows 2019, VS 2019, ARM"
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -G "Visual Studio 16 2019" -A ARM ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      platform: 'ARM'
+      configuration: 'RelWithDebInfo'
+- job: Windows_2019_VS2019_ARM64
+  displayName: "Windows 2019, VS 2019, ARM64"
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -G "Visual Studio 16 2019" -A ARM64 ..
+  - task: MSBuild@1
+    inputs:
+      solution: 'build/*.sln'
+      msbuildArchitecture: 'x64'
+      platform: 'ARM64'
       configuration: 'RelWithDebInfo'
 - job: Windows_2016_VS2017_x64
   displayName: "Windows 2016, VS 2017, x64"
