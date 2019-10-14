@@ -23,14 +23,14 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
       ArtifactName: 'Windows_2019_VS2019_Win32'
       publishLocation: 'Container'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
 - job: Windows_2019_VS2019_x64
   displayName: "Windows 2019, VS 2019, x64"
   pool:
@@ -45,14 +45,14 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
       ArtifactName: 'Windows_2019_VS2019_x64'
       publishLocation: 'Container'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
 - job: Windows_2019_VS2019_ARM
   displayName: "Windows 2019, VS 2019, ARM"
   pool:
@@ -106,14 +106,14 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
       ArtifactName: 'Windows_2016_VS2017_Win32'
       publishLocation: 'Container'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
 - job: Windows_2016_VS2017_x64
   displayName: "Windows 2016, VS 2017, x64"
   pool:
@@ -128,14 +128,14 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
       ArtifactName: 'Windows_2016_VS2017_x64'
       publishLocation: 'Container'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
 - job: Windows_2016_VS2017_ARM
   displayName: "Windows 2016, VS 2017, ARM"
   pool:
@@ -189,14 +189,14 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
       ArtifactName: 'Windows_2012R2_VS2015_Win32'
       publishLocation: 'Container'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
 - job: Windows_2012R2_VS2015_x64
   displayName: "Windows 2012 R2, VS 2015, x64"
   pool:
@@ -211,14 +211,14 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
       ArtifactName: 'Windows_2012R2_VS2015_x64'
       publishLocation: 'Container'
+  - script: |
+      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+    displayName: Run against Test Server
 
 # Ubuntu 18.04 variants
 
@@ -236,14 +236,14 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'Ubuntu_1804_GCC_x86_64'
       publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
 - job: Ubuntu_1804_GCC_ARM
   displayName: "Ubuntu 18.04, GCC, ARM"
   pool:
@@ -303,14 +303,14 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'Ubuntu_1804_Clang_x86_64'
       publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
 
 # Ubuntu 16.04 variants
 
@@ -328,14 +328,14 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'Ubuntu_1604_GCC_x86_64'
       publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
 - job: Ubuntu_1604_GCC_ARM
   displayName: "Ubuntu 16.04, GCC, ARM"
   pool:
@@ -395,14 +395,14 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'Ubuntu_1604_Clang_x86_64'
       publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
 
 # macOS variants
 
@@ -420,14 +420,14 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
     displayName: Validate Binary Architecture
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'macOS_1014_Clang_x86_64'
       publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
 - job: macOS_1013_Clang_x86_64
   displayName: "macOS 10.13, Clang, x86_64"
   pool:
@@ -442,11 +442,11 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
     displayName: Validate Binary Architecture
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'macOS_1013_Clang_x86_64'
       publishLocation: 'Container'
+  - script: |
+      build/fpprofile/fpprofile 103.31.113.109:40000
+    displayName: Run against Test Server
