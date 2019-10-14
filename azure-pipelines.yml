@@ -77,7 +77,13 @@ jobs:
     vmImage: 'macOS-10.14'
   steps:
   - script: |
-      brew install libsodium
+      wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz
+      tar -xvf libsodium-1.0.18.tar.gz
+      ls
+      cd libsodium-1.0.18
+      ./configure
+      make && make check
+      sudo make install
     displayName: Install libsodium
   - task: CMake@1
     inputs:
@@ -91,7 +97,13 @@ jobs:
     vmImage: 'macOS-10.13'
   steps:
   - script: |
-      brew install libsodium
+      wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz
+      tar -xvf libsodium-1.0.18.tar.gz
+      ls
+      cd libsodium-1.0.18
+      ./configure
+      make && make check
+      sudo make install
     displayName: Install libsodium
   - task: CMake@1
     inputs:
