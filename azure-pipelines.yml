@@ -264,6 +264,28 @@ jobs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
       ArtifactName: 'Ubuntu_1604_GCC_ARM'
       publishLocation: 'Container'
+- job: Ubuntu_1604_GCC_ARM64
+  displayName: "Ubuntu 16.04, GCC, ARM64"
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - script: |
+      sudo apt install -y gcc make gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+    displayName: Install ARM toolchain
+  - task: CMake@1
+    inputs:
+      cmakeArgs: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc ..
+  - script: |
+      cd build && make
+    displayName: Make
+  - script: |
+      file build/fpprofile/fpprofile
+    displayName: Display Binary Architecture
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
+      ArtifactName: 'Ubuntu_1604_GCC_ARM64'
+      publishLocation: 'Container'
 
 # macOS variants
 
