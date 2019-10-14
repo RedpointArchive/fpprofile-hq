@@ -216,7 +216,7 @@ jobs:
       cd build && make
     displayName: Make
   - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | awk '/x86-64/'
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64 TEST'
     displayName: Validate Binary Architecture
   - task: PublishBuildArtifacts@1
     inputs:
@@ -238,7 +238,7 @@ jobs:
       cd build && make
     displayName: Make
   - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | awk '/x86-64/'
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM, EABI'
     displayName: Validate Binary Architecture
   - task: PublishBuildArtifacts@1
     inputs:
@@ -260,7 +260,7 @@ jobs:
       cd build && make
     displayName: Make
   - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | awk '/x86-64/'
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM aarch64'
     displayName: Validate Binary Architecture
   - task: PublishBuildArtifacts@1
     inputs:
@@ -280,7 +280,7 @@ jobs:
       cd build && make
     displayName: Make
   - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | awk '/x86-64/'
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
   - task: PublishBuildArtifacts@1
     inputs:
@@ -302,7 +302,7 @@ jobs:
       cd build && make
     displayName: Make
   - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | awk '/x86-64/'
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
   - task: PublishBuildArtifacts@1
     inputs:
@@ -324,7 +324,7 @@ jobs:
       cd build && make
     displayName: Make
   - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | awk '/x86-64/'
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM, EABI'
     displayName: Validate Binary Architecture
   - task: PublishBuildArtifacts@1
     inputs:
@@ -346,7 +346,7 @@ jobs:
       cd build && make
     displayName: Make
   - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | awk '/x86-64/'
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM aarch64'
     displayName: Validate Binary Architecture
   - task: PublishBuildArtifacts@1
     inputs:
@@ -366,7 +366,7 @@ jobs:
       cd build && make
     displayName: Make
   - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | awk '/x86-64/'
+      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
   - task: PublishBuildArtifacts@1
     inputs:
