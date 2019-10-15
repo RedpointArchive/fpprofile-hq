@@ -5,6 +5,10 @@
 #include "netcode.h"
 #include "sodium.h"
 
+#if defined(ANDROID)
+#include <jni.h>
+#include <android/log.h>
+#endif
 #include <stdio.h>
 #include <math.h>
 #include <inttypes.h>
@@ -12,6 +16,34 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <stdbool.h>
+
+#if defined(ANDROID)
+int fpprofile_log( const char * format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    char buffer[4*1024];
+    vsprintf( buffer, format, args );
+
+    __android_log_print(ANDROID_LOG_INFO, "fpprofile_native", "%s", buffer);
+
+    va_end( args );
+
+	return 0;
+}
+#else
+int fpprofile_log( const char * format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    char buffer[4*1024];
+    vsprintf( buffer, format, args );
+	printf( "%s", buffer );
+    va_end( args );
+
+	return 0;
+}
+#endif
 
 #define CONNECT_TOKEN_EXPIRY 30
 #define CONNECT_TOKEN_TIMEOUT 5
@@ -143,39 +175,60 @@ bool verify_instruction_sequence(char* sequence, int sequence_bytes, float* loca
 	return (uint32_t)*local_result == (uint32_t)*remote_result;
 }
 
-int main(int argc, char* argv[])
+bool is_server, is_client, is_dual;
+double time, delta_time;
+int valid_sequences, invalid_sequences;
+
+struct netcode_server_t* server;
+struct netcode_client_t* client;
+
+#if defined(ANDROID)
+JNIEXPORT jboolean JNICALL
+Java_games_redpoint_fpprofile_FPProfileTestClient_MainActivity_fpprofileStart(JNIEnv *env, jobject obj, jstring clientConnectTo)
+#else
+bool fpprofile_start(int argc, char* argv[])
+#endif
 {
+	netcode_set_printf_function(&fpprofile_log);
+
 	if (netcode_init() != NETCODE_OK)
 	{
-		printf("error: failed to initialize netcode.io\n");
-		return 1;
+		fpprofile_log("error: failed to initialize netcode.io\n");
+		return false;
 	}
 
 	netcode_log_level(NETCODE_LOG_LEVEL_ERROR);
 
-	double time = 0.0;
-	double delta_time = 1.0 / 60.0;
+	time = 0.0;
+	delta_time = 1.0 / 60.0;
 
-	if (argc != 2)
-	{
-		printf("error: expected either 'server' or server address to connect to\n");
-		return 1;
-	}
+#if defined(ANDROID)
+	is_server = false;
+	is_client = true;
+	is_dual = false;
 
-	bool is_server = argc >= 2 && (strcmp(argv[1], "server") == 0 || strcmp(argv[1], "dual") == 0);
-	bool is_client = argc >= 2 && strcmp(argv[1], "server") != 0;
+	char* server_address = "127.0.0.1:40000";
+	const char* client_server_address = (*env)->GetStringUTFChars(env, clientConnectTo, 0);
+#else
+    if (argc != 2)
+    {
+        fpprofile_log("error: expected either 'server' or server address to connect to\n");
+        return false;
+    }
+
+	is_server = argc >= 2 && (strcmp(argv[1], "server") == 0 || strcmp(argv[1], "dual") == 0);
+	is_client = argc >= 2 && strcmp(argv[1], "server") != 0;
+	is_dual = argc >= 2 && strcmp(argv[1], "dual") == 0;
 
 	char* server_address = "127.0.0.1:40000";
 	char* client_server_address = argv[1];
-
-	struct netcode_server_t* server;
-	struct netcode_client_t* client;
+#endif
 
 	if (is_server)
 	{
 		netcode_log_level(NETCODE_LOG_LEVEL_INFO);
 
-		printf("acting as server\n");
+		fpprofile_log("acting as server\n");
 
 		struct netcode_server_config_t server_config;
 		netcode_default_server_config(&server_config);
@@ -186,20 +239,23 @@ int main(int argc, char* argv[])
 
 		if (!server)
 		{
-			printf("error: failed to create server\n");
-			return 1;
+			fpprofile_log("error: failed to create server\n");
+#if defined(ANDROID)
+            (*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
+#endif
+			return false;
 		}
 
 		netcode_server_start(server, 64);
 
-		printf("server started on %s\n", server_address);
+		fpprofile_log("server started on %s\n", server_address);
 	}
 	
 	if (is_client)
 	{
-		printf("acting as client\n");
+		fpprofile_log("acting as client\n");
 
-		if (strcmp(argv[1], "dual") == 0)
+		if (is_dual)
 		{
 			client_server_address = "127.0.0.1:40000";
 		}
@@ -210,133 +266,160 @@ int main(int argc, char* argv[])
 
 		if (!client)
 		{
-			printf("error: failed to create client\n");
-			return 1;
+			fpprofile_log("error: failed to create client\n");
+#if defined(ANDROID)
+            (*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
+#endif
+			return false;
 		}
 
 		uint8_t connect_token[NETCODE_CONNECT_TOKEN_BYTES];
 
 		uint64_t client_id = 0;
 		netcode_random_bytes((uint8_t*)&client_id, 8);
-		printf("client id is %.16" PRIx64 "\n", client_id);
+		fpprofile_log("client id is %.16" PRIx64 "\n", client_id);
 
 		uint8_t user_data[NETCODE_USER_DATA_BYTES];
 		netcode_random_bytes(user_data, NETCODE_USER_DATA_BYTES);
 
 		if (netcode_generate_connect_token(1, (NETCODE_CONST char**) & client_server_address, (NETCODE_CONST char**) & server_address, CONNECT_TOKEN_EXPIRY, CONNECT_TOKEN_TIMEOUT, client_id, PROTOCOL_ID, private_key, user_data, connect_token) != NETCODE_OK)
 		{
-			printf("error: failed to generate connect token\n");
-			return 1;
+			fpprofile_log("error: failed to generate connect token\n");
+#if defined(ANDROID)
+            (*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
+#endif
+			return false;
 		}
 
-		printf("client connecting to %s\n", client_server_address);
+		fpprofile_log("client connecting to %s\n", client_server_address);
 
 		netcode_client_connect(client, connect_token);
 	}
 
 	signal(SIGINT, interrupt_handler);
 
-	int valid_sequences = 0;
-	int invalid_sequences = 0;
+	valid_sequences = 0;
+	invalid_sequences = 0;
 
-	while (!quit)
+#if defined(ANDROID)
+    (*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
+#endif
+
+	return true;
+}
+
+#if defined(ANDROID)
+JNIEXPORT jboolean JNICALL
+Java_games_redpoint_fpprofile_FPProfileTestClient_MainActivity_fpprofileStep(JNIEnv *env, jobject obj)
+#else
+bool fpprofile_step()
+#endif
+{
+	if (is_server)
 	{
-		if (is_server)
+		netcode_server_update(server, time);
+
+		char* sequence = generate_instruction_sequence();
+		if (sequence != NULL)
 		{
-			netcode_server_update(server, time);
-
-			char* sequence = generate_instruction_sequence();
-			if (sequence != NULL)
+			for (int i = 0; i < netcode_server_max_clients(server); i++)
 			{
-				for (int i = 0; i < netcode_server_max_clients(server); i++)
+				if (netcode_server_client_connected(server, i))
 				{
-					if (netcode_server_client_connected(server, i))
-					{
-						netcode_server_send_packet(server, i, sequence, SEQUENCE_SIZE);
-					}
+					netcode_server_send_packet(server, i, sequence, SEQUENCE_SIZE);
 				}
-
-				free(sequence);
 			}
+
+			free(sequence);
 		}
-		
-		if (is_client)
+	}
+	
+	if (is_client)
+	{
+		netcode_client_update(client, time);
+
+		while (1)
 		{
-			netcode_client_update(client, time);
-
-			while (1)
+			int packet_bytes;
+			uint64_t packet_sequence;
+			void* packet = netcode_client_receive_packet(client, &packet_bytes, &packet_sequence);
+			if (!packet)
 			{
-				int packet_bytes;
-				uint64_t packet_sequence;
-				void* packet = netcode_client_receive_packet(client, &packet_bytes, &packet_sequence);
-				if (!packet)
-				{
-					break;
-				}
-
-				float local_result, remote_result;
-
-				if (!verify_instruction_sequence((char*)packet, packet_bytes, &local_result, &remote_result))
-				{
-					invalid_sequences++;
-
-					printf("deterministic floating point sequence failed, got local result %f with remote result %f\n\n", local_result, remote_result);
-				}
-				else
-				{
-					valid_sequences++;
-				}
-
-				printf("sequences valid: %i invalid: %i\n", valid_sequences, invalid_sequences);
-
-				netcode_client_free_packet(client, packet);
-			}
-
-			if (!is_server)
-			{
-				if (valid_sequences + invalid_sequences > 1000)
-				{
-					quit = 1;
-
-					if (invalid_sequences > 0)
-					{
-						// at least one failure, exit with failure
-						exitCode = 1;
-					}
-				}
-			}
-
-			if (netcode_client_state(client) <= NETCODE_CLIENT_STATE_DISCONNECTED)
-			{
-				if (!is_server)
-				{
-					if (valid_sequences + invalid_sequences <= 1000)
-					{
-						// we are exiting due to disconnection, before we are ready to exit
-						printf("unexpected disconnection, exited before collecting data, automatic failure\n");
-						exitCode = 2;
-						quit = 1;
-					}
-					else
-					{
-						printf("unexpected disconnection, but got enough data\n");
-					}
-				}
-				else
-				{
-					printf("unexpected disconnection while also running as a server, exiting\n");
-					quit = 1;
-				}
-
 				break;
 			}
+
+			float local_result, remote_result;
+
+			if (!verify_instruction_sequence((char*)packet, packet_bytes, &local_result, &remote_result))
+			{
+				invalid_sequences++;
+
+				fpprofile_log("deterministic floating point sequence failed, got local result %f with remote result %f\n\n", local_result, remote_result);
+			}
+			else
+			{
+				valid_sequences++;
+			}
+
+			fpprofile_log("sequences valid: %i invalid: %i\n", valid_sequences, invalid_sequences);
+
+			netcode_client_free_packet(client, packet);
 		}
 
-		netcode_sleep(delta_time);
+		if (!is_server)
+		{
+			if (valid_sequences + invalid_sequences > 1000)
+			{
+				quit = 1;
 
-		time += delta_time;
+				if (invalid_sequences > 0)
+				{
+					// at least one failure, exit with failure
+					exitCode = 1;
+				}
+			}
+		}
+
+		if (netcode_client_state(client) <= NETCODE_CLIENT_STATE_DISCONNECTED)
+		{
+			if (!is_server)
+			{
+				if (valid_sequences + invalid_sequences <= 1000)
+				{
+					// we are exiting due to disconnection, before we are ready to exit
+					fpprofile_log("unexpected disconnection, exited before collecting data, automatic failure\n");
+					exitCode = 2;
+					quit = 1;
+				}
+				else
+				{
+					fpprofile_log("unexpected disconnection, but got enough data\n");
+				}
+			}
+			else
+			{
+				fpprofile_log("unexpected disconnection while also running as a server, exiting\n");
+				quit = 1;
+			}
+
+			return false;
+		}
 	}
 
+	netcode_sleep(delta_time);
+
+	time += delta_time;
+
+	return !quit;
+}
+
+#if defined(ANDROID)
+JNIEXPORT jint JNICALL
+Java_games_redpoint_fpprofile_FPProfileTestClient_MainActivity_fpprofileEnd(JNIEnv *env, jobject obj)
+#else
+int fpprofile_end()
+#endif
+{
 	if (is_client)
 	{
 		netcode_client_disconnect(client);
@@ -361,3 +444,17 @@ int main(int argc, char* argv[])
 
 	return exitCode;
 }
+
+#if !defined(ANDROID)
+int main(int argc, char* argv[])
+{
+	if (!fpprofile_start(argc, argv))
+	{
+		return 1;
+	}
+
+	while (fpprofile_step()) ;
+
+	return fpprofile_end();
+}
+#endif

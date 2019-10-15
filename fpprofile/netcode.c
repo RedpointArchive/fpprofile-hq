@@ -69,6 +69,20 @@
 #define NETCODE_ENABLE_LOGGING 1
 #endif // #ifndef NETCODE_ENABLE_LOGGING
 
+#if defined(ANDROID)
+uint64_t netcode_sys_time()
+{
+    struct timeval tm;
+    gettimeofday( &tm, NULL );
+    return (uint64_t) tm.tv_sec;
+}
+#else
+uint64_t netcode_sys_time()
+{
+    return (uint64_t) time( NULL );
+}
+#endif
+
 // ------------------------------------------------------------------
 
 static void netcode_default_assert_handler( NETCODE_CONST char * condition, NETCODE_CONST char * function, NETCODE_CONST char * file, int line )
@@ -648,7 +662,7 @@ int netcode_socket_create( struct netcode_socket_t * s, struct netcode_address_t
     if ( s->handle <= 0 )
 #endif // #if NETCODE_PLATFORM == NETCODE_PLATFORM_WINDOWS
     {
-        netcode_printf( NETCODE_LOG_LEVEL_ERROR, "error: failed to create socket\n" );
+        netcode_printf( NETCODE_LOG_LEVEL_ERROR, "error: failed to create socket: %s\n", strerror(errno) );
         return NETCODE_SOCKET_ERROR_CREATE_FAILED;
     }
 
@@ -2989,7 +3003,7 @@ void netcode_client_process_packet( struct netcode_client_t * client, struct net
     allowed_packets[NETCODE_CONNECTION_PAYLOAD_PACKET] = 1;
     allowed_packets[NETCODE_CONNECTION_DISCONNECT_PACKET] = 1;
 
-    uint64_t current_timestamp = (uint64_t) time( NULL );
+    uint64_t current_timestamp = (uint64_t) netcode_sys_time();
 
     uint64_t sequence;
 
@@ -3024,7 +3038,7 @@ void netcode_client_receive_packets( struct netcode_client_t * client )
     allowed_packets[NETCODE_CONNECTION_PAYLOAD_PACKET] = 1;
     allowed_packets[NETCODE_CONNECTION_DISCONNECT_PACKET] = 1;
 
-    uint64_t current_timestamp = (uint64_t) time( NULL );
+    uint64_t current_timestamp = (uint64_t) netcode_sys_time();
 
     if ( !client->config.network_simulator )
     {
@@ -4545,7 +4559,7 @@ void netcode_server_process_packet( struct netcode_server_t * server, struct net
     allowed_packets[NETCODE_CONNECTION_PAYLOAD_PACKET] = 1;
     allowed_packets[NETCODE_CONNECTION_DISCONNECT_PACKET] = 1;
 
-    uint64_t current_timestamp = (uint64_t) time( NULL );
+    uint64_t current_timestamp = (uint64_t) netcode_sys_time();
 
     uint64_t sequence;
 
@@ -4656,7 +4670,7 @@ void netcode_server_receive_packets( struct netcode_server_t * server )
     allowed_packets[NETCODE_CONNECTION_PAYLOAD_PACKET] = 1;
     allowed_packets[NETCODE_CONNECTION_DISCONNECT_PACKET] = 1;
 
-    uint64_t current_timestamp = (uint64_t) time( NULL );
+    uint64_t current_timestamp = (uint64_t) netcode_sys_time();
 
     if ( !server->config.network_simulator )
     {
@@ -5110,7 +5124,7 @@ int netcode_generate_connect_token( int num_server_addresses,
 
     // encrypt the buffer
 
-    uint64_t create_timestamp = time( NULL );
+    uint64_t create_timestamp = netcode_sys_time();
     uint64_t expire_timestamp = ( expire_seconds >= 0 ) ? ( create_timestamp + expire_seconds ) : 0xFFFFFFFFFFFFFFFFULL;
     if ( netcode_encrypt_connect_token_private( connect_token_data, NETCODE_CONNECT_TOKEN_PRIVATE_BYTES, NETCODE_VERSION_INFO, protocol_id, expire_timestamp, nonce, private_key ) != NETCODE_OK )
         return NETCODE_ERROR;
@@ -5587,7 +5601,7 @@ static void test_connect_token()
 
     // encrypt the buffer
 
-    uint64_t expire_timestamp = time( NULL ) + 30;
+    uint64_t expire_timestamp = netcode_sys_time() + 30;
     uint8_t nonce[NETCODE_CONNECT_TOKEN_NONCE_BYTES];
     netcode_generate_nonce(nonce);
     uint8_t key[NETCODE_KEY_BYTES];
@@ -5703,7 +5717,7 @@ static void test_connection_request_packet()
 
     memcpy( encrypted_connect_token_data, connect_token_data, NETCODE_CONNECT_TOKEN_PRIVATE_BYTES );
 
-    uint64_t connect_token_expire_timestamp = time( NULL ) + 30;
+    uint64_t connect_token_expire_timestamp = netcode_sys_time() + 30;
     uint8_t connect_token_nonce[NETCODE_CONNECT_TOKEN_NONCE_BYTES];
     netcode_generate_nonce(connect_token_nonce);
     uint8_t connect_token_key[NETCODE_KEY_BYTES];
@@ -5748,7 +5762,7 @@ static void test_connection_request_packet()
     memset( allowed_packets, 1, sizeof( allowed_packets ) );
 
     struct netcode_connection_request_packet_t * output_packet = (struct netcode_connection_request_packet_t*) 
-        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, time( NULL ), connect_token_key, allowed_packets, NULL, NULL, NULL );
+        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, netcode_sys_time(), connect_token_key, allowed_packets, NULL, NULL, NULL );
 
     check( output_packet );
 
@@ -5792,7 +5806,7 @@ void test_connection_denied_packet()
     memset( allowed_packet_types, 1, sizeof( allowed_packet_types ) );
 
     struct netcode_connection_denied_packet_t * output_packet = (struct netcode_connection_denied_packet_t*) 
-        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, time( NULL ), NULL, allowed_packet_types, NULL, NULL, NULL );
+        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, netcode_sys_time(), NULL, allowed_packet_types, NULL, NULL, NULL );
 
     check( output_packet );
 
@@ -5833,7 +5847,7 @@ void test_connection_challenge_packet()
     memset( allowed_packet_types, 1, sizeof( allowed_packet_types ) );
 
     struct netcode_connection_challenge_packet_t * output_packet = (struct netcode_connection_challenge_packet_t*) 
-        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, time( NULL ), NULL, allowed_packet_types, NULL, NULL, NULL );
+        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, netcode_sys_time(), NULL, allowed_packet_types, NULL, NULL, NULL );
 
     check( output_packet );
 
@@ -5876,7 +5890,7 @@ void test_connection_response_packet()
     memset( allowed_packet_types, 1, sizeof( allowed_packet_types ) );
 
     struct netcode_connection_response_packet_t * output_packet = (struct netcode_connection_response_packet_t*) 
-        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, time( NULL ), NULL, allowed_packet_types, NULL, NULL, NULL );
+        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, netcode_sys_time(), NULL, allowed_packet_types, NULL, NULL, NULL );
 
     check( output_packet );
 
@@ -5919,7 +5933,7 @@ void test_connection_keep_alive_packet()
     memset( allowed_packet_types, 1, sizeof( allowed_packet_types ) );
     
     struct netcode_connection_keep_alive_packet_t * output_packet = (struct netcode_connection_keep_alive_packet_t*) 
-        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, time( NULL ), NULL, allowed_packet_types, NULL, NULL, NULL );
+        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, netcode_sys_time(), NULL, allowed_packet_types, NULL, NULL, NULL );
 
     check( output_packet );
 
@@ -5963,7 +5977,7 @@ void test_connection_payload_packet()
     memset( allowed_packet_types, 1, sizeof( allowed_packet_types ) );
 
     struct netcode_connection_payload_packet_t * output_packet = (struct netcode_connection_payload_packet_t*) 
-        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, time( NULL ), NULL, allowed_packet_types, NULL, NULL, NULL );
+        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, netcode_sys_time(), NULL, allowed_packet_types, NULL, NULL, NULL );
 
     check( output_packet );
 
@@ -6005,7 +6019,7 @@ void test_connection_disconnect_packet()
     memset( allowed_packet_types, 1, sizeof( allowed_packet_types ) );
 
     struct netcode_connection_disconnect_packet_t * output_packet = (struct netcode_connection_disconnect_packet_t*) 
-        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, time( NULL ), NULL, allowed_packet_types, NULL, NULL, NULL );
+        netcode_read_packet( buffer, bytes_written, &sequence, packet_key, TEST_PROTOCOL_ID, netcode_sys_time(), NULL, allowed_packet_types, NULL, NULL, NULL );
 
     check( output_packet );
 
@@ -6047,7 +6061,7 @@ void test_connect_token_public()
 
     // encrypt the buffer
 
-    uint64_t create_timestamp = time( NULL );
+    uint64_t create_timestamp = netcode_sys_time();
     uint64_t expire_timestamp = create_timestamp + 30;
     uint8_t connect_token_nonce[NETCODE_CONNECT_TOKEN_NONCE_BYTES];
     netcode_generate_nonce( connect_token_nonce );    
