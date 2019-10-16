@@ -371,6 +371,9 @@ jobs:
       - task: CMake@1
         inputs:
           cmakeArgs: -G Xcode ..
+      - script: |
+          xcodebuild -showsdks
+        displayName: Show SDKs
       - task: Xcode@5
         inputs:
           actions: "build"
@@ -401,6 +404,9 @@ jobs:
       - task: CMake@1
         inputs:
           cmakeArgs: -G Xcode ..
+      - script: |
+          xcodebuild -showsdks
+        displayName: Show SDKs
       - task: Xcode@5
         inputs:
           actions: "build"
