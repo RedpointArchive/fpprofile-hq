@@ -131,7 +131,7 @@ jobs:
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile.exe"
-          ArtifactName: "Windows_2016_VS2017_x64"
+          ArtifactName: "Windows_2016_VS2017_x64_$(CONFIGURATION)"
           publishLocation: "Container"
       - script: |
           powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\$(CONFIGURATION)\fpprofile.exe
@@ -468,7 +468,7 @@ jobs:
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile"
-          ArtifactName: "macOS_1014_Xcode10_x86_64"
+          ArtifactName: "macOS_1014_Xcode10_x86_64_$(CONFIGURATION)"
           publishLocation: "Container"
       - script: |
           pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/$(CONFIGURATION)/fpprofile
@@ -511,7 +511,7 @@ jobs:
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile"
-          ArtifactName: "macOS_1013_Xcode10_x86_64"
+          ArtifactName: "macOS_1013_Xcode10_x86_64_$(CONFIGURATION)"
           publishLocation: "Container"
       - script: |
           pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/$(CONFIGURATION)/fpprofile
