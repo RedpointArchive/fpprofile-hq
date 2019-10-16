@@ -18,28 +18,28 @@
 #include <stdbool.h>
 
 #if defined(ANDROID)
-int fpprofile_log( const char * format, ... )
+int fpprofile_log(const char *format, ...)
 {
-    va_list args;
-    va_start( args, format );
-    char buffer[4*1024];
-    vsprintf( buffer, format, args );
+	va_list args;
+	va_start(args, format);
+	char buffer[4 * 1024];
+	vsprintf(buffer, format, args);
 
-    __android_log_print(ANDROID_LOG_INFO, "fpprofile_native", "%s", buffer);
+	__android_log_print(ANDROID_LOG_INFO, "fpprofile_native", "%s", buffer);
 
-    va_end( args );
+	va_end(args);
 
 	return 0;
 }
 #else
-int fpprofile_log( const char * format, ... )
+int fpprofile_log(const char *format, ...)
 {
-    va_list args;
-    va_start( args, format );
-    char buffer[4*1024];
-    vsprintf( buffer, format, args );
-	printf( "%s", buffer );
-    va_end( args );
+	va_list args;
+	va_start(args, format);
+	char buffer[4 * 1024];
+	vsprintf(buffer, format, args);
+	printf("%s", buffer);
+	va_end(args);
 
 	return 0;
 }
@@ -49,10 +49,10 @@ int fpprofile_log( const char * format, ... )
 #define CONNECT_TOKEN_TIMEOUT 5
 #define PROTOCOL_ID 0x1122334455667788
 
-static uint8_t private_key[NETCODE_KEY_BYTES] = { 0x60, 0x6a, 0xbe, 0x6e, 0xc9, 0x19, 0x10, 0xea,
-												  0x9a, 0x65, 0x62, 0xf6, 0x6f, 0x2b, 0x30, 0xe4,
-												  0x43, 0x71, 0xd6, 0x2c, 0xd1, 0x99, 0x27, 0x26,
-												  0x6b, 0x3c, 0x60, 0xf4, 0xb7, 0x15, 0xab, 0xa1 };
+static uint8_t private_key[NETCODE_KEY_BYTES] = {0x60, 0x6a, 0xbe, 0x6e, 0xc9, 0x19, 0x10, 0xea,
+												 0x9a, 0x65, 0x62, 0xf6, 0x6f, 0x2b, 0x30, 0xe4,
+												 0x43, 0x71, 0xd6, 0x2c, 0xd1, 0x99, 0x27, 0x26,
+												 0x6b, 0x3c, 0x60, 0xf4, 0xb7, 0x15, 0xab, 0xa1};
 
 static volatile int quit = 0;
 static volatile int exitCode = 0;
@@ -103,21 +103,21 @@ float execute_instruction(float current, float input, int operation)
 	case INSTRUCTION_DIV:
 		return current / input;
 	case INSTRUCTION_POW:
-		return powf(current, input);
+		return current; // powf(current, input);
 	case INSTRUCTION_SQRT:
-		return sqrtf(current);
+		return current; // sqrtf(current);
 	case INSTRUCTION_TAN:
-		return tanf(current);
+		return current; // tanf(current);
 	case INSTRUCTION_ATAN:
-		return atanf(current);
+		return current; // atanf(current);
 	default:
 		return current;
 	}
 }
 
-char* generate_instruction_sequence()
+char *generate_instruction_sequence()
 {
-	char* sequence = (char*)malloc(SEQUENCE_SIZE);
+	char *sequence = (char *)malloc(SEQUENCE_SIZE);
 	if (sequence == NULL)
 	{
 		return NULL;
@@ -144,7 +144,7 @@ char* generate_instruction_sequence()
 	return sequence;
 }
 
-bool verify_instruction_sequence(char* sequence, int sequence_bytes, float* local_result, float* remote_result)
+bool verify_instruction_sequence(char *sequence, int sequence_bytes, float *local_result, float *remote_result)
 {
 	if (sequence_bytes != SEQUENCE_SIZE)
 	{
@@ -179,14 +179,14 @@ bool is_server, is_client, is_dual;
 double time, delta_time;
 int valid_sequences, invalid_sequences;
 
-struct netcode_server_t* server;
-struct netcode_client_t* client;
+struct netcode_server_t *server;
+struct netcode_client_t *client;
 
 #if defined(ANDROID)
 JNIEXPORT jboolean JNICALL
 Java_games_redpoint_fpprofile_FPProfileTestClient_MainActivity_fpprofileStart(JNIEnv *env, jobject obj, jstring clientConnectTo)
 #else
-bool fpprofile_start(int argc, char* argv[])
+bool fpprofile_start(int argc, char *argv[])
 #endif
 {
 	netcode_set_printf_function(&fpprofile_log);
@@ -207,21 +207,21 @@ bool fpprofile_start(int argc, char* argv[])
 	is_client = true;
 	is_dual = false;
 
-	char* server_address = "127.0.0.1:40000";
-	const char* client_server_address = (*env)->GetStringUTFChars(env, clientConnectTo, 0);
+	char *server_address = "127.0.0.1:40000";
+	const char *client_server_address = (*env)->GetStringUTFChars(env, clientConnectTo, 0);
 #else
-    if (argc != 2)
-    {
-        fpprofile_log("error: expected either 'server' or server address to connect to\n");
-        return false;
-    }
+	if (argc != 2)
+	{
+		fpprofile_log("error: expected either 'server' or server address to connect to\n");
+		return false;
+	}
 
 	is_server = argc >= 2 && (strcmp(argv[1], "server") == 0 || strcmp(argv[1], "dual") == 0);
 	is_client = argc >= 2 && strcmp(argv[1], "server") != 0;
 	is_dual = argc >= 2 && strcmp(argv[1], "dual") == 0;
 
-	char* server_address = "127.0.0.1:40000";
-	char* client_server_address = argv[1];
+	char *server_address = "127.0.0.1:40000";
+	char *client_server_address = argv[1];
 #endif
 
 	if (is_server)
@@ -241,7 +241,7 @@ bool fpprofile_start(int argc, char* argv[])
 		{
 			fpprofile_log("error: failed to create server\n");
 #if defined(ANDROID)
-            (*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
+			(*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
 #endif
 			return false;
 		}
@@ -250,7 +250,7 @@ bool fpprofile_start(int argc, char* argv[])
 
 		fpprofile_log("server started on %s\n", server_address);
 	}
-	
+
 	if (is_client)
 	{
 		fpprofile_log("acting as client\n");
@@ -268,7 +268,7 @@ bool fpprofile_start(int argc, char* argv[])
 		{
 			fpprofile_log("error: failed to create client\n");
 #if defined(ANDROID)
-            (*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
+			(*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
 #endif
 			return false;
 		}
@@ -276,17 +276,17 @@ bool fpprofile_start(int argc, char* argv[])
 		uint8_t connect_token[NETCODE_CONNECT_TOKEN_BYTES];
 
 		uint64_t client_id = 0;
-		netcode_random_bytes((uint8_t*)&client_id, 8);
+		netcode_random_bytes((uint8_t *)&client_id, 8);
 		fpprofile_log("client id is %.16" PRIx64 "\n", client_id);
 
 		uint8_t user_data[NETCODE_USER_DATA_BYTES];
 		netcode_random_bytes(user_data, NETCODE_USER_DATA_BYTES);
 
-		if (netcode_generate_connect_token(1, (NETCODE_CONST char**) & client_server_address, (NETCODE_CONST char**) & server_address, CONNECT_TOKEN_EXPIRY, CONNECT_TOKEN_TIMEOUT, client_id, PROTOCOL_ID, private_key, user_data, connect_token) != NETCODE_OK)
+		if (netcode_generate_connect_token(1, (NETCODE_CONST char **)&client_server_address, (NETCODE_CONST char **)&server_address, CONNECT_TOKEN_EXPIRY, CONNECT_TOKEN_TIMEOUT, client_id, PROTOCOL_ID, private_key, user_data, connect_token) != NETCODE_OK)
 		{
 			fpprofile_log("error: failed to generate connect token\n");
 #if defined(ANDROID)
-            (*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
+			(*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
 #endif
 			return false;
 		}
@@ -302,7 +302,7 @@ bool fpprofile_start(int argc, char* argv[])
 	invalid_sequences = 0;
 
 #if defined(ANDROID)
-    (*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
+	(*env)->ReleaseStringUTFChars(env, clientConnectTo, client_server_address);
 #endif
 
 	return true;
@@ -319,7 +319,7 @@ bool fpprofile_step()
 	{
 		netcode_server_update(server, time);
 
-		char* sequence = generate_instruction_sequence();
+		char *sequence = generate_instruction_sequence();
 		if (sequence != NULL)
 		{
 			for (int i = 0; i < netcode_server_max_clients(server); i++)
@@ -333,7 +333,7 @@ bool fpprofile_step()
 			free(sequence);
 		}
 	}
-	
+
 	if (is_client)
 	{
 		netcode_client_update(client, time);
@@ -342,7 +342,7 @@ bool fpprofile_step()
 		{
 			int packet_bytes;
 			uint64_t packet_sequence;
-			void* packet = netcode_client_receive_packet(client, &packet_bytes, &packet_sequence);
+			void *packet = netcode_client_receive_packet(client, &packet_bytes, &packet_sequence);
 			if (!packet)
 			{
 				break;
@@ -350,7 +350,7 @@ bool fpprofile_step()
 
 			float local_result, remote_result;
 
-			if (!verify_instruction_sequence((char*)packet, packet_bytes, &local_result, &remote_result))
+			if (!verify_instruction_sequence((char *)packet, packet_bytes, &local_result, &remote_result))
 			{
 				invalid_sequences++;
 
@@ -446,14 +446,15 @@ int fpprofile_end()
 }
 
 #if !defined(ANDROID)
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	if (!fpprofile_start(argc, argv))
 	{
 		return 1;
 	}
 
-	while (fpprofile_step()) ;
+	while (fpprofile_step())
+		;
 
 	return fpprofile_end();
 }
