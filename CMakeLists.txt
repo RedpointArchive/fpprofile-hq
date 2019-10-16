@@ -12,7 +12,7 @@ message("Detected target architecture: ${TARGET_CPU_ARCH}")
 
 if(${TARGET_CPU_ARCH} STREQUAL "i386")
     if(MSVC)
-        message(FATAL_ERROR "32-bit Windows can not produce binaries free of x87 FPU instructions; target 64-bit instead.")
+        add_compile_options(/arch:SSE2)
     elseif(UNIX)
         if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
             add_compile_options(-mno-80387 -march=nocona -mfpmath=sse -msse2 -frounding-math -fsignaling-nans -mieee-fp -mno-fp-ret-in-387)

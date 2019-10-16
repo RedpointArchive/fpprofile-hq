@@ -58,14 +58,18 @@ void interrupt_handler(int signal)
 #define INSTRUCTION_SUB 1
 #define INSTRUCTION_MUL 2
 #define INSTRUCTION_DIV 3
-#define INSTRUCTION_POW 4
-#define INSTRUCTION_SQRT 5
-#define INSTRUCTION_TAN 6
-#define INSTRUCTION_ATAN 7
+#define INSTRUCTION_MATHLIB_POW 4
+#define INSTRUCTION_MATHLIB_SQRT 5
+#define INSTRUCTION_MATHLIB_TAN 6
+#define INSTRUCTION_MATHLIB_ATAN 7
+#define INSTRUCTION_MATHLIB_COS 8
+#define INSTRUCTION_MATHLIB_ACOS 9
+#define INSTRUCTION_MATHLIB_SIN 10
+#define INSTRUCTION_MATHLIB_ASIN 11
 
-#define INSTRUCTION_MAX_OP_NUM 8
+#define INSTRUCTION_MAX_OP_NUM 12
 
-#define SEQUENCE_COUNT 4
+#define SEQUENCE_COUNT 1
 #define SEQUENCE_ENTRY_SIZE (sizeof(float) + sizeof(int8_t))
 #define SEQUENCE_SIZE (sizeof(float) + (SEQUENCE_COUNT * SEQUENCE_ENTRY_SIZE) + sizeof(float))
 
@@ -93,14 +97,22 @@ float execute_instruction(float current, float input, int operation)
 		return current * input;
 	case INSTRUCTION_DIV:
 		return current / input;
-	case INSTRUCTION_POW:
-		return current; // powf(current, input);
-	case INSTRUCTION_SQRT:
-		return current; // sqrtf(current);
-	case INSTRUCTION_TAN:
-		return current; // tanf(current);
-	case INSTRUCTION_ATAN:
-		return current; // atanf(current);
+	case INSTRUCTION_MATHLIB_POW:
+		return powf(current, input);
+	case INSTRUCTION_MATHLIB_SQRT:
+		return sqrtf(current);
+	case INSTRUCTION_MATHLIB_TAN:
+		return tanf(current);
+	case INSTRUCTION_MATHLIB_ATAN:
+		return atanf(current);
+	case INSTRUCTION_MATHLIB_COS:
+		return cosf(current);
+	case INSTRUCTION_MATHLIB_ACOS:
+		return acosf(current);
+	case INSTRUCTION_MATHLIB_SIN:
+		return sinf(current);
+	case INSTRUCTION_MATHLIB_ASIN:
+		return asinf(current);
 	default:
 		return current;
 	}
@@ -164,6 +176,85 @@ bool verify_instruction_sequence(char *sequence, int sequence_bytes, float *loca
 
 	// compare the floats at a bit level - make sure they're exactly the same bits
 	return (uint32_t)*local_result == (uint32_t)*remote_result;
+}
+
+char* describe_instruction_sequence(char* sequence, int sequence_bytes)
+{
+	if (sequence_bytes != SEQUENCE_SIZE)
+	{
+		return NULL;
+	}
+
+	float initial;
+	memcpy(&initial, sequence, sizeof(float));
+
+	float chain = initial;
+
+	char* str = (char)malloc(2048);
+	if (str == NULL)
+	{
+		return NULL;
+	}
+	sprintf(str, "initial: %f", initial);
+
+	for (int i = 0; i < SEQUENCE_COUNT; i++)
+	{
+		int8_t operation;
+		float next;
+
+		memcpy(&operation, sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE), sizeof(int8_t));
+		memcpy(&next, sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE) + sizeof(int8_t), sizeof(float));
+
+		switch (operation) {
+			case INSTRUCTION_ADD:
+				sprintf(str + strlen(str), ", add %f + %f", chain, next);
+				break;
+			case INSTRUCTION_SUB:
+				sprintf(str + strlen(str), ", sub %f - %f", chain, next);
+				break;
+			case INSTRUCTION_MUL:
+				sprintf(str + strlen(str), ", mul %f * %f", chain, next);
+				break;
+			case INSTRUCTION_DIV:
+				sprintf(str + strlen(str), ", div %f / %f", chain, next);
+				break;
+			case INSTRUCTION_MATHLIB_POW:
+				sprintf(str + strlen(str), ", mathlib pow %f ^ %f", chain, next);
+				break;
+			case INSTRUCTION_MATHLIB_SQRT:
+				sprintf(str + strlen(str), ", mathlib sqrt %f", chain);
+				break;
+			case INSTRUCTION_MATHLIB_TAN:
+				sprintf(str + strlen(str), ", mathlib tan %f", chain);
+				break;
+			case INSTRUCTION_MATHLIB_ATAN:
+				sprintf(str + strlen(str), ", mathlib atan %f", chain);
+				break;
+			case INSTRUCTION_MATHLIB_COS:
+				sprintf(str + strlen(str), ", mathlib cos %f", chain);
+				break;
+			case INSTRUCTION_MATHLIB_ACOS:
+				sprintf(str + strlen(str), ", mathlib acos %f", chain);
+				break;
+			case INSTRUCTION_MATHLIB_SIN:
+				sprintf(str + strlen(str), ", mathlib sin %f", chain);
+				break;
+			case INSTRUCTION_MATHLIB_ASIN:
+				sprintf(str + strlen(str), ", mathlib asin %f", chain);
+				break;
+		}
+
+		chain = execute_instruction(chain, next, operation);
+
+		sprintf(str + strlen(str), " = %f", chain);
+	}
+
+	float remote_result;
+	memcpy(&remote_result, sequence + sizeof(float) + (SEQUENCE_COUNT * SEQUENCE_ENTRY_SIZE), sizeof(float));
+
+	sprintf(str + strlen(str), ", L %f == R %f ?", chain, remote_result);
+
+	return str;
 }
 
 bool is_server, is_client, is_dual;
@@ -347,7 +438,12 @@ bool fpprofile_step()
 			{
 				invalid_sequences++;
 
-				fpprofile_log("deterministic floating point sequence failed, got local result %f with remote result %f\n\n", local_result, remote_result);
+				char* desc = describe_instruction_sequence((char*)packet, packet_bytes);
+				fpprofile_log("deterministic floating point sequence failed, got local result %f with remote result %f\nsequence: %s\n\n", local_result, remote_result, desc);
+				if (desc != NULL)
+				{
+					free(desc);
+				}
 			}
 			else
 			{
