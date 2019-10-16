@@ -41,6 +41,7 @@ jobs:
       - script: |
           powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\$(CONFIGURATION)\fpprofile.exe
         displayName: Check for x87 FPU instructions
+        continueOnError: true
       - script: |
           build\fpprofile\$(CONFIGURATION)\fpprofile.exe 103.31.113.109:40000
         displayName: Run against Test Server
@@ -79,6 +80,7 @@ jobs:
       - script: |
           powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\$(CONFIGURATION)\fpprofile.exe
         displayName: Check for x87 FPU instructions
+        continueOnError: true
       - script: |
           build\fpprofile\$(CONFIGURATION)\fpprofile.exe 103.31.113.109:40000
         displayName: Run against Test Server
@@ -117,6 +119,7 @@ jobs:
       - script: |
           powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\$(CONFIGURATION)\fpprofile.exe
         displayName: Check for x87 FPU instructions
+        continueOnError: true
       - script: |
           build\fpprofile\$(CONFIGURATION)\fpprofile.exe 103.31.113.109:40000
         displayName: Run against Test Server
@@ -145,6 +148,7 @@ jobs:
       - script: |
           pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
         displayName: Check for x87 FPU instructions
+        continueOnError: true
       - script: |
           build/fpprofile/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -215,6 +219,7 @@ jobs:
       - script: |
           pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
         displayName: Check for x87 FPU instructions
+        continueOnError: true
       - script: |
           build/fpprofile/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -243,6 +248,7 @@ jobs:
       - script: |
           pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
         displayName: Check for x87 FPU instructions
+        continueOnError: true
       - script: |
           build/fpprofile/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -313,6 +319,7 @@ jobs:
       - script: |
           pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
         displayName: Check for x87 FPU instructions
+        continueOnError: true
       - script: |
           build/fpprofile/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -359,6 +366,7 @@ jobs:
       - script: |
           pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/$(CONFIGURATION)/fpprofile
         displayName: Check for x87 FPU instructions
+        continueOnError: true
       - script: |
           build/fpprofile/$(CONFIGURATION)/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -402,6 +410,7 @@ jobs:
       - script: |
           pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/$(CONFIGURATION)/fpprofile
         displayName: Check for x87 FPU instructions
+        continueOnError: true
       - script: |
           build/fpprofile/$(CONFIGURATION)/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
