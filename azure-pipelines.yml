@@ -108,6 +108,16 @@ jobs:
     displayName: "Windows 2016, VS 2017, x64"
     pool:
       vmImage: "vs2017-win2016"
+    strategy:
+      matrix:
+        Debug:
+          CONFIGURATION: Debug
+        Release:
+          CONFIGURATION: Release
+        RelWithDebInfo:
+          CONFIGURATION: RelWithDebInfo
+        MinSizeRel:
+          CONFIGURATION: MinSizeRel
     steps:
       - task: CMake@1
         inputs:
@@ -117,22 +127,32 @@ jobs:
           solution: "build/*.sln"
           msbuildArchitecture: "x64"
           platform: "x64"
-          configuration: "RelWithDebInfo"
+          configuration: "$(CONFIGURATION)"
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile.exe"
           ArtifactName: "Windows_2016_VS2017_x64"
           publishLocation: "Container"
       - script: |
-          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\$(CONFIGURATION)\fpprofile.exe
         displayName: Check for x87 FPU instructions
       - script: |
-          build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+          build\fpprofile\$(CONFIGURATION)\fpprofile.exe 103.31.113.109:40000
         displayName: Run against Test Server
   - job: Windows_2016_VS2017_ARM
     displayName: "Windows 2016, VS 2017, ARM"
     pool:
       vmImage: "vs2017-win2016"
+    strategy:
+      matrix:
+        Debug:
+          CONFIGURATION: Debug
+        Release:
+          CONFIGURATION: Release
+        RelWithDebInfo:
+          CONFIGURATION: RelWithDebInfo
+        MinSizeRel:
+          CONFIGURATION: MinSizeRel
     steps:
       - task: CMake@1
         inputs:
@@ -141,16 +161,26 @@ jobs:
         inputs:
           solution: "build/*.sln"
           platform: "ARM"
-          configuration: "RelWithDebInfo"
+          configuration: "$(CONFIGURATION)"
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
-          ArtifactName: "Windows_2016_VS2017_ARM"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile.exe"
+          ArtifactName: "Windows_2016_VS2017_ARM_$(CONFIGURATION)"
           publishLocation: "Container"
   - job: Windows_2016_VS2017_ARM64
     displayName: "Windows 2016, VS 2017, ARM64"
     pool:
       vmImage: "vs2017-win2016"
+    strategy:
+      matrix:
+        Debug:
+          CONFIGURATION: Debug
+        Release:
+          CONFIGURATION: Release
+        RelWithDebInfo:
+          CONFIGURATION: RelWithDebInfo
+        MinSizeRel:
+          CONFIGURATION: MinSizeRel
     steps:
       - task: CMake@1
         inputs:
@@ -160,11 +190,11 @@ jobs:
           solution: "build/*.sln"
           msbuildArchitecture: "x64"
           platform: "ARM64"
-          configuration: "RelWithDebInfo"
+          configuration: "$(CONFIGURATION)"
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
-          ArtifactName: "Windows_2016_VS2017_ARM64"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile.exe"
+          ArtifactName: "Windows_2016_VS2017_ARM64_$(CONFIGURATION)"
           publishLocation: "Container"
 
   # Visual Studio 2015 variants
@@ -173,6 +203,16 @@ jobs:
     displayName: "Windows 2012 R2, VS 2015, x64"
     pool:
       vmImage: "vs2015-win2012r2"
+    strategy:
+      matrix:
+        Debug:
+          CONFIGURATION: Debug
+        Release:
+          CONFIGURATION: Release
+        RelWithDebInfo:
+          CONFIGURATION: RelWithDebInfo
+        MinSizeRel:
+          CONFIGURATION: MinSizeRel
     steps:
       - task: CMake@1
         inputs:
@@ -182,17 +222,17 @@ jobs:
           solution: "build/*.sln"
           msbuildArchitecture: "x64"
           platform: "x64"
-          configuration: "RelWithDebInfo"
+          configuration: "$(CONFIGURATION)"
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
-          ArtifactName: "Windows_2012R2_VS2015_x64"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile.exe"
+          ArtifactName: "Windows_2012R2_VS2015_x64_$(CONFIGURATION)"
           publishLocation: "Container"
       - script: |
-          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\$(CONFIGURATION)\fpprofile.exe
         displayName: Check for x87 FPU instructions
       - script: |
-          build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+          build\fpprofile\$(CONFIGURATION)\fpprofile.exe 103.31.113.109:40000
         displayName: Run against Test Server
 
   # Ubuntu 18.04 variants
@@ -397,6 +437,16 @@ jobs:
     displayName: "macOS 10.14, Xcode 10, x86_64"
     pool:
       vmImage: "macOS-10.14"
+    strategy:
+      matrix:
+        Debug:
+          CONFIGURATION: Debug
+        Release:
+          CONFIGURATION: Release
+        RelWithDebInfo:
+          CONFIGURATION: RelWithDebInfo
+        MinSizeRel:
+          CONFIGURATION: MinSizeRel
     steps:
       - task: CMake@1
         inputs:
@@ -407,29 +457,39 @@ jobs:
       - task: Xcode@5
         inputs:
           actions: "build"
-          configuration: "RelWithDebInfo"
+          configuration: "$(CONFIGURATION)"
           sdk: "macosx10.14"
           xcodeVersion: "10"
           packageApp: false
           scheme: "ALL_BUILD"
       - script: |
-          file build/fpprofile/RelWithDebInfo/fpprofile && file build/fpprofile/RelWithDebInfo/fpprofile | grep 'x86_64'
+          file build/fpprofile/$(CONFIGURATION)/fpprofile && file build/fpprofile/$(CONFIGURATION)/fpprofile | grep 'x86_64'
         displayName: Validate Binary Architecture
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile"
           ArtifactName: "macOS_1014_Xcode10_x86_64"
           publishLocation: "Container"
       - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/RelWithDebInfo/fpprofile
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/$(CONFIGURATION)/fpprofile
         displayName: Check for x87 FPU instructions
       - script: |
-          build/fpprofile/RelWithDebInfo/fpprofile 103.31.113.109:40000
+          build/fpprofile/$(CONFIGURATION)/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
   - job: macOS_1013_Xcode10_x86_64
     displayName: "macOS 10.13, Xcode 10, x86_64"
     pool:
       vmImage: "macOS-10.13"
+    strategy:
+      matrix:
+        Debug:
+          CONFIGURATION: Debug
+        Release:
+          CONFIGURATION: Release
+        RelWithDebInfo:
+          CONFIGURATION: RelWithDebInfo
+        MinSizeRel:
+          CONFIGURATION: MinSizeRel
     steps:
       - task: CMake@1
         inputs:
@@ -440,22 +500,22 @@ jobs:
       - task: Xcode@5
         inputs:
           actions: "build"
-          configuration: "RelWithDebInfo"
+          configuration: "$(CONFIGURATION)"
           sdk: "macosx10.14"
           xcodeVersion: "10"
           packageApp: false
           scheme: "ALL_BUILD"
       - script: |
-          file build/fpprofile/RelWithDebInfo/fpprofile && file build/fpprofile/RelWithDebInfo/fpprofile | grep 'x86_64'
+          file build/fpprofile/$(CONFIGURATION)/fpprofile && file build/fpprofile/$(CONFIGURATION)/fpprofile | grep 'x86_64'
         displayName: Validate Binary Architecture
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile"
           ArtifactName: "macOS_1013_Xcode10_x86_64"
           publishLocation: "Container"
       - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/RelWithDebInfo/fpprofile
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/$(CONFIGURATION)/fpprofile
         displayName: Check for x87 FPU instructions
       - script: |
-          build/fpprofile/RelWithDebInfo/fpprofile 103.31.113.109:40000
+          build/fpprofile/$(CONFIGURATION)/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
