@@ -363,53 +363,61 @@ jobs:
 
   # macOS variants
 
-  - job: macOS_1014_Clang_x86_64
-    displayName: "macOS 10.14, Clang, x86_64"
+  - job: macOS_1014_Xcode10_x86_64
+    displayName: "macOS 10.14, Xcode 10, x86_64"
     pool:
       vmImage: "macOS-10.14"
     steps:
       - task: CMake@1
         inputs:
-          cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+          cmakeArgs: -G Xcode ..
+      - task: Xcode@5
+        inputs:
+          actions: "build"
+          configuration: "RelWithDebInfo"
+          sdk: "macosx10.14"
+          xcodeVersion: "10"
+          packageApp: false
       - script: |
-          cd build && make VERBOSE=1
-        displayName: Make
-      - script: |
-          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
+          file build/fpprofile/RelWithDebInfo/fpprofile && file build/fpprofile/RelWithDebInfo/fpprofile | grep 'x86_64'
         displayName: Validate Binary Architecture
       - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/RelWithDebInfo/fpprofile
         displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
-          ArtifactName: "macOS_1014_Clang_x86_64"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile"
+          ArtifactName: "macOS_1014_Xcode10_x86_64"
           publishLocation: "Container"
       - script: |
-          build/fpprofile/fpprofile 103.31.113.109:40000
+          build/fpprofile/RelWithDebInfo/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
-  - job: macOS_1013_Clang_x86_64
-    displayName: "macOS 10.13, Clang, x86_64"
+  - job: macOS_1013_Xcode10_x86_64
+    displayName: "macOS 10.13, Xcode 10, x86_64"
     pool:
       vmImage: "macOS-10.13"
     steps:
       - task: CMake@1
         inputs:
-          cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+          cmakeArgs: -G Xcode ..
+      - task: Xcode@5
+        inputs:
+          actions: "build"
+          configuration: "RelWithDebInfo"
+          sdk: "macosx10.13"
+          xcodeVersion: "10"
+          packageApp: false
       - script: |
-          cd build && make VERBOSE=1
-        displayName: Make
-      - script: |
-          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
+          file build/fpprofile/RelWithDebInfo/fpprofile && file build/fpprofile/RelWithDebInfo/fpprofile | grep 'x86_64'
         displayName: Validate Binary Architecture
       - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/RelWithDebInfo/fpprofile
         displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
-          ArtifactName: "macOS_1013_Clang_x86_64"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile"
+          ArtifactName: "macOS_1013_Xcode10_x86_64"
           publishLocation: "Container"
       - script: |
-          build/fpprofile/fpprofile 103.31.113.109:40000
+          build/fpprofile/RelWithDebInfo/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
