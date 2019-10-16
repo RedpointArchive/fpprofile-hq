@@ -411,7 +411,7 @@ jobs:
         inputs:
           actions: "build"
           configuration: "RelWithDebInfo"
-          sdk: "macosx10.13"
+          sdk: "macosx10.14"
           xcodeVersion: "10"
           packageApp: false
           scheme: "ALL_BUILD"
