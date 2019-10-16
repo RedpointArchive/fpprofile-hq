@@ -23,14 +23,14 @@ jobs:
           msbuildArchitecture: "x64"
           platform: "x64"
           configuration: "RelWithDebInfo"
-      - script: |
-          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-        displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
           ArtifactName: "Windows_2019_VS2019_x64"
           publishLocation: "Container"
+      - script: |
+          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+        displayName: Check for x87 FPU instructions
       - script: |
           build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
         displayName: Run against Test Server
@@ -88,14 +88,14 @@ jobs:
           msbuildArchitecture: "x64"
           platform: "x64"
           configuration: "RelWithDebInfo"
-      - script: |
-          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-        displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
           ArtifactName: "Windows_2016_VS2017_x64"
           publishLocation: "Container"
+      - script: |
+          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+        displayName: Check for x87 FPU instructions
       - script: |
           build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
         displayName: Run against Test Server
@@ -153,14 +153,14 @@ jobs:
           msbuildArchitecture: "x64"
           platform: "x64"
           configuration: "RelWithDebInfo"
-      - script: |
-          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-        displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
           ArtifactName: "Windows_2012R2_VS2015_x64"
           publishLocation: "Container"
+      - script: |
+          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+        displayName: Check for x87 FPU instructions
       - script: |
           build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
         displayName: Run against Test Server
@@ -181,14 +181,14 @@ jobs:
       - script: |
           file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
         displayName: Validate Binary Architecture
-      - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
-        displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
           ArtifactName: "Ubuntu_1804_GCC_x86_64"
           publishLocation: "Container"
+      - script: |
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
       - script: |
           build/fpprofile/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -251,14 +251,14 @@ jobs:
       - script: |
           file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
         displayName: Validate Binary Architecture
-      - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
-        displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
           ArtifactName: "Ubuntu_1804_Clang_x86_64"
           publishLocation: "Container"
+      - script: |
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
       - script: |
           build/fpprofile/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -279,14 +279,14 @@ jobs:
       - script: |
           file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
         displayName: Validate Binary Architecture
-      - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
-        displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
           ArtifactName: "Ubuntu_1604_GCC_x86_64"
           publishLocation: "Container"
+      - script: |
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
       - script: |
           build/fpprofile/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -349,14 +349,14 @@ jobs:
       - script: |
           file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
         displayName: Validate Binary Architecture
-      - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
-        displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
           ArtifactName: "Ubuntu_1604_Clang_x86_64"
           publishLocation: "Container"
+      - script: |
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
       - script: |
           build/fpprofile/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -385,14 +385,14 @@ jobs:
       - script: |
           file build/fpprofile/RelWithDebInfo/fpprofile && file build/fpprofile/RelWithDebInfo/fpprofile | grep 'x86_64'
         displayName: Validate Binary Architecture
-      - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/RelWithDebInfo/fpprofile
-        displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile"
           ArtifactName: "macOS_1014_Xcode10_x86_64"
           publishLocation: "Container"
+      - script: |
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/RelWithDebInfo/fpprofile
+        displayName: Check for x87 FPU instructions
       - script: |
           build/fpprofile/RelWithDebInfo/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server
@@ -418,14 +418,14 @@ jobs:
       - script: |
           file build/fpprofile/RelWithDebInfo/fpprofile && file build/fpprofile/RelWithDebInfo/fpprofile | grep 'x86_64'
         displayName: Validate Binary Architecture
-      - script: |
-          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/RelWithDebInfo/fpprofile
-        displayName: Check for x87 FPU instructions
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile"
           ArtifactName: "macOS_1013_Xcode10_x86_64"
           publishLocation: "Container"
+      - script: |
+          pwsh fpcheck/fpcheck.ps1 -Path build/fpprofile/RelWithDebInfo/fpprofile
+        displayName: Check for x87 FPU instructions
       - script: |
           build/fpprofile/RelWithDebInfo/fpprofile 103.31.113.109:40000
         displayName: Run against Test Server

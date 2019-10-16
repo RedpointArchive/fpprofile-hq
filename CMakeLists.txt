@@ -8,6 +8,8 @@ project ("fpprofile")
 include(TargetArch.cmake)
 target_architecture(TARGET_CPU_ARCH)
 
+message("Detected target architecture: ${TARGET_CPU_ARCH}")
+
 if(${TARGET_CPU_ARCH} STREQUAL "i386")
     if(MSVC)
         message(FATAL_ERROR "32-bit Windows can not produce binaries free of x87 FPU instructions; target 64-bit instead.")
