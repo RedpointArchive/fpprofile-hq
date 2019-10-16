@@ -23,6 +23,9 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - script: |
+      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -44,6 +47,9 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - script: |
+      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -66,6 +72,9 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+  - script: |
+      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -127,6 +136,9 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - script: |
+      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -148,6 +160,9 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - script: |
+      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -170,6 +185,9 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+  - script: |
+      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -231,6 +249,9 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - script: |
+      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -252,6 +273,9 @@ jobs:
       solution: 'build/*.sln'
       platform: 'Win32'
       configuration: 'RelWithDebInfo'
+  - script: |
+      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -274,6 +298,9 @@ jobs:
       msbuildArchitecture: 'x64'
       platform: 'x64'
       configuration: 'RelWithDebInfo'
+  - script: |
+      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
@@ -299,6 +326,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -321,6 +351,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -388,6 +421,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -410,6 +446,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -435,6 +474,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -457,6 +499,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -524,6 +569,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -546,6 +594,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -571,6 +622,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
@@ -593,6 +647,9 @@ jobs:
   - script: |
       file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
     displayName: Validate Binary Architecture
+  - script: |
+      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+    displayName: Check for x87 FPU instructions
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
