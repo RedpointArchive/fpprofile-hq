@@ -378,6 +378,7 @@ jobs:
           sdk: "macosx10.14"
           xcodeVersion: "10"
           packageApp: false
+          scheme: "ALL_BUILD"
       - script: |
           file build/fpprofile/RelWithDebInfo/fpprofile && file build/fpprofile/RelWithDebInfo/fpprofile | grep 'x86_64'
         displayName: Validate Binary Architecture
@@ -407,6 +408,7 @@ jobs:
           sdk: "macosx10.13"
           xcodeVersion: "10"
           packageApp: false
+          scheme: "ALL_BUILD"
       - script: |
           file build/fpprofile/RelWithDebInfo/fpprofile && file build/fpprofile/RelWithDebInfo/fpprofile | grep 'x86_64'
         displayName: Validate Binary Architecture
