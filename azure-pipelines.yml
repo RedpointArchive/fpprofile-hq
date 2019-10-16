@@ -4,657 +4,412 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  - master
 
 jobs:
+  # Visual Studio 2019 variants
 
-# Visual Studio 2019 variants
+  - job: Windows_2019_VS2019_x64
+    displayName: "Windows 2019, VS 2019, x64"
+    pool:
+      vmImage: "windows-2019"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -G "Visual Studio 16 2019" -A x64 ..
+      - task: MSBuild@1
+        inputs:
+          solution: "build/*.sln"
+          msbuildArchitecture: "x64"
+          platform: "x64"
+          configuration: "RelWithDebInfo"
+      - script: |
+          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+        displayName: Check for x87 FPU instructions
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
+          ArtifactName: "Windows_2019_VS2019_x64"
+          publishLocation: "Container"
+      - script: |
+          build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+        displayName: Run against Test Server
+  - job: Windows_2019_VS2019_ARM
+    displayName: "Windows 2019, VS 2019, ARM"
+    pool:
+      vmImage: "windows-2019"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -G "Visual Studio 16 2019" -A ARM ..
+      - task: MSBuild@1
+        inputs:
+          solution: "build/*.sln"
+          platform: "ARM"
+          configuration: "RelWithDebInfo"
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
+          ArtifactName: "Windows_2019_VS2019_ARM"
+          publishLocation: "Container"
+  - job: Windows_2019_VS2019_ARM64
+    displayName: "Windows 2019, VS 2019, ARM64"
+    pool:
+      vmImage: "windows-2019"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -G "Visual Studio 16 2019" -A ARM64 ..
+      - task: MSBuild@1
+        inputs:
+          solution: "build/*.sln"
+          msbuildArchitecture: "x64"
+          platform: "ARM64"
+          configuration: "RelWithDebInfo"
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
+          ArtifactName: "Windows_2019_VS2019_ARM64"
+          publishLocation: "Container"
 
-- job: Windows_2019_VS2019_Win32
-  displayName: "Windows 2019, VS 2019, Win32"
-  pool:
-    vmImage: 'windows-2019'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 16 2019" -A Win32 ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      platform: 'Win32'
-      configuration: 'RelWithDebInfo'
-  - script: |
-      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2019_VS2019_Win32'
-      publishLocation: 'Container'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Windows_2019_VS2019_Win32_SSE2
-  displayName: "Windows 2019, VS 2019, Win32, SSE2"
-  pool:
-    vmImage: 'windows-2019'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 16 2019" -A Win32 -DCMAKE_C_FLAGS="/arch:SSE2" -DCMAKE_CXX_FLAGS="/arch:SSE2" ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      platform: 'Win32'
-      configuration: 'RelWithDebInfo'
-  - script: |
-      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2019_VS2019_Win32_SSE2'
-      publishLocation: 'Container'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Windows_2019_VS2019_x64
-  displayName: "Windows 2019, VS 2019, x64"
-  pool:
-    vmImage: 'windows-2019'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 16 2019" -A x64 ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      msbuildArchitecture: 'x64'
-      platform: 'x64'
-      configuration: 'RelWithDebInfo'
-  - script: |
-      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2019_VS2019_x64'
-      publishLocation: 'Container'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Windows_2019_VS2019_ARM
-  displayName: "Windows 2019, VS 2019, ARM"
-  pool:
-    vmImage: 'windows-2019'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 16 2019" -A ARM ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      platform: 'ARM'
-      configuration: 'RelWithDebInfo'
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2019_VS2019_ARM'
-      publishLocation: 'Container'
-- job: Windows_2019_VS2019_ARM64
-  displayName: "Windows 2019, VS 2019, ARM64"
-  pool:
-    vmImage: 'windows-2019'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 16 2019" -A ARM64 ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      msbuildArchitecture: 'x64'
-      platform: 'ARM64'
-      configuration: 'RelWithDebInfo'
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2019_VS2019_ARM64'
-      publishLocation: 'Container'
+  # Visual Studio 2017 variants
 
-# Visual Studio 2017 variants
+  - job: Windows_2016_VS2017_x64
+    displayName: "Windows 2016, VS 2017, x64"
+    pool:
+      vmImage: "vs2017-win2016"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -G "Visual Studio 15 2017" -A x64 ..
+      - task: MSBuild@1
+        inputs:
+          solution: "build/*.sln"
+          msbuildArchitecture: "x64"
+          platform: "x64"
+          configuration: "RelWithDebInfo"
+      - script: |
+          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+        displayName: Check for x87 FPU instructions
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
+          ArtifactName: "Windows_2016_VS2017_x64"
+          publishLocation: "Container"
+      - script: |
+          build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+        displayName: Run against Test Server
+  - job: Windows_2016_VS2017_ARM
+    displayName: "Windows 2016, VS 2017, ARM"
+    pool:
+      vmImage: "vs2017-win2016"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -G "Visual Studio 15 2017" -A ARM ..
+      - task: MSBuild@1
+        inputs:
+          solution: "build/*.sln"
+          platform: "ARM"
+          configuration: "RelWithDebInfo"
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
+          ArtifactName: "Windows_2016_VS2017_ARM"
+          publishLocation: "Container"
+  - job: Windows_2016_VS2017_ARM64
+    displayName: "Windows 2016, VS 2017, ARM64"
+    pool:
+      vmImage: "vs2017-win2016"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -G "Visual Studio 15 2017" -A ARM64 ..
+      - task: MSBuild@1
+        inputs:
+          solution: "build/*.sln"
+          msbuildArchitecture: "x64"
+          platform: "ARM64"
+          configuration: "RelWithDebInfo"
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
+          ArtifactName: "Windows_2016_VS2017_ARM64"
+          publishLocation: "Container"
 
-- job: Windows_2016_VS2017_Win32
-  displayName: "Windows 2016, VS 2017, Win32"
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 15 2017" -A Win32 ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      platform: 'Win32'
-      configuration: 'RelWithDebInfo'
-  - script: |
-      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2016_VS2017_Win32'
-      publishLocation: 'Container'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Windows_2016_VS2017_Win32_SSE2
-  displayName: "Windows 2016, VS 2017, Win32, SSE2"
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 15 2017" -A Win32 -DCMAKE_C_FLAGS="/arch:SSE2" -DCMAKE_CXX_FLAGS="/arch:SSE2" ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      platform: 'Win32'
-      configuration: 'RelWithDebInfo'
-  - script: |
-      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2016_VS2017_Win32_SSE2'
-      publishLocation: 'Container'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Windows_2016_VS2017_x64
-  displayName: "Windows 2016, VS 2017, x64"
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 15 2017" -A x64 ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      msbuildArchitecture: 'x64'
-      platform: 'x64'
-      configuration: 'RelWithDebInfo'
-  - script: |
-      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2016_VS2017_x64'
-      publishLocation: 'Container'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Windows_2016_VS2017_ARM
-  displayName: "Windows 2016, VS 2017, ARM"
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 15 2017" -A ARM ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      platform: 'ARM'
-      configuration: 'RelWithDebInfo'
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2016_VS2017_ARM'
-      publishLocation: 'Container'
-- job: Windows_2016_VS2017_ARM64
-  displayName: "Windows 2016, VS 2017, ARM64"
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 15 2017" -A ARM64 ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      msbuildArchitecture: 'x64'
-      platform: 'ARM64'
-      configuration: 'RelWithDebInfo'
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2016_VS2017_ARM64'
-      publishLocation: 'Container'
+  # Visual Studio 2015 variants
 
-# Visual Studio 2015 variants
+  - job: Windows_2012R2_VS2015_x64
+    displayName: "Windows 2012 R2, VS 2015, x64"
+    pool:
+      vmImage: "vs2015-win2012r2"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -G "Visual Studio 14 2015" -A x64 ..
+      - task: MSBuild@1
+        inputs:
+          solution: "build/*.sln"
+          msbuildArchitecture: "x64"
+          platform: "x64"
+          configuration: "RelWithDebInfo"
+      - script: |
+          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+        displayName: Check for x87 FPU instructions
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
+          ArtifactName: "Windows_2012R2_VS2015_x64"
+          publishLocation: "Container"
+      - script: |
+          build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+        displayName: Run against Test Server
 
-- job: Windows_2012R2_VS2015_Win32
-  displayName: "Windows 2012 R2, VS 2015, Win32"
-  pool:
-    vmImage: 'vs2015-win2012r2'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 14 2015" -A Win32 ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      platform: 'Win32'
-      configuration: 'RelWithDebInfo'
-  - script: |
-      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2012R2_VS2015_Win32'
-      publishLocation: 'Container'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Windows_2012R2_VS2015_Win32_SSE2
-  displayName: "Windows 2012 R2, VS 2015, Win32, SSE2"
-  pool:
-    vmImage: 'vs2015-win2012r2'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 14 2015" -A Win32 -DCMAKE_C_FLAGS="/arch:SSE2" -DCMAKE_CXX_FLAGS="/arch:SSE2" ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      platform: 'Win32'
-      configuration: 'RelWithDebInfo'
-  - script: |
-      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2012R2_VS2015_Win32_SSE2'
-      publishLocation: 'Container'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Windows_2012R2_VS2015_x64
-  displayName: "Windows 2012 R2, VS 2015, x64"
-  pool:
-    vmImage: 'vs2015-win2012r2'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -G "Visual Studio 14 2015" -A x64 ..
-  - task: MSBuild@1
-    inputs:
-      solution: 'build/*.sln'
-      msbuildArchitecture: 'x64'
-      platform: 'x64'
-      configuration: 'RelWithDebInfo'
-  - script: |
-      powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe'
-      ArtifactName: 'Windows_2012R2_VS2015_x64'
-      publishLocation: 'Container'
-  - script: |
-      build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
-    displayName: Run against Test Server
+  # Ubuntu 18.04 variants
 
-# Ubuntu 18.04 variants
+  - job: Ubuntu_1804_GCC_x86_64
+    displayName: "Ubuntu 18.04, GCC, x86_64"
+    pool:
+      vmImage: "ubuntu-18.04"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
+        displayName: Validate Binary Architecture
+      - script: |
+          pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "Ubuntu_1804_GCC_x86_64"
+          publishLocation: "Container"
+      - script: |
+          build/fpprofile/fpprofile 103.31.113.109:40000
+        displayName: Run against Test Server
+  - job: Ubuntu_1804_GCC_ARM
+    displayName: "Ubuntu 18.04, GCC, ARM"
+    pool:
+      vmImage: "ubuntu-18.04"
+    steps:
+      - script: |
+          sudo apt install -y gcc make g++-arm-linux-gnueabi gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi
+        displayName: Install ARM toolchain
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-g++ ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM, EABI'
+        displayName: Validate Binary Architecture
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "Ubuntu_1804_GCC_ARM"
+          publishLocation: "Container"
+  - job: Ubuntu_1804_GCC_ARM64
+    displayName: "Ubuntu 18.04, GCC, ARM64"
+    pool:
+      vmImage: "ubuntu-18.04"
+    steps:
+      - script: |
+          sudo apt install -y gcc make g++-aarch64-linux-gnu gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+        displayName: Install ARM64 toolchain
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM aarch64'
+        displayName: Validate Binary Architecture
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "Ubuntu_1804_GCC_ARM64"
+          publishLocation: "Container"
 
-- job: Ubuntu_1804_GCC_x86_64
-  displayName: "Ubuntu 18.04, GCC, x86_64"
-  pool:
-    vmImage: 'ubuntu-18.04'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1804_GCC_x86_64'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Ubuntu_1804_GCC_x86_64_no80387
-  displayName: "Ubuntu 18.04, GCC, x86_64, -mno-80387"
-  pool:
-    vmImage: 'ubuntu-18.04'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_FLAGS=-mno-80387 -DCMAKE_CXX_FLAGS=-mno-80387 ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1804_GCC_x86_64_no80387'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Ubuntu_1804_GCC_ARM
-  displayName: "Ubuntu 18.04, GCC, ARM"
-  pool:
-    vmImage: 'ubuntu-18.04'
-  steps:
-  - script: |
-      sudo apt install -y gcc make g++-arm-linux-gnueabi gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi
-    displayName: Install ARM toolchain
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-g++ ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM, EABI'
-    displayName: Validate Binary Architecture
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1804_GCC_ARM'
-      publishLocation: 'Container'
-- job: Ubuntu_1804_GCC_ARM64
-  displayName: "Ubuntu 18.04, GCC, ARM64"
-  pool:
-    vmImage: 'ubuntu-18.04'
-  steps:
-  - script: |
-      sudo apt install -y gcc make g++-aarch64-linux-gnu gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
-    displayName: Install ARM64 toolchain
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM aarch64'
-    displayName: Validate Binary Architecture
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1804_GCC_ARM64'
-      publishLocation: 'Container'
+  - job: Ubuntu_1804_Clang_x86_64
+    displayName: "Ubuntu 18.04, Clang, x86_64"
+    pool:
+      vmImage: "ubuntu-18.04"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
+        displayName: Validate Binary Architecture
+      - script: |
+          pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "Ubuntu_1804_Clang_x86_64"
+          publishLocation: "Container"
+      - script: |
+          build/fpprofile/fpprofile 103.31.113.109:40000
+        displayName: Run against Test Server
 
-- job: Ubuntu_1804_Clang_x86_64
-  displayName: "Ubuntu 18.04, Clang, x86_64"
-  pool:
-    vmImage: 'ubuntu-18.04'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1804_Clang_x86_64'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Ubuntu_1804_Clang_x86_64_no80387
-  displayName: "Ubuntu 18.04, Clang, x86_64, -mno-80387"
-  pool:
-    vmImage: 'ubuntu-18.04'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_FLAGS=-mno-80387 -DCMAKE_CXX_FLAGS=-mno-80387 ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1804_Clang_x86_64_no80387'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
+  # Ubuntu 16.04 variants
 
-# Ubuntu 16.04 variants
+  - job: Ubuntu_1604_GCC_x86_64
+    displayName: "Ubuntu 16.04, GCC, x86_64"
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
+        displayName: Validate Binary Architecture
+      - script: |
+          pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "Ubuntu_1604_GCC_x86_64"
+          publishLocation: "Container"
+      - script: |
+          build/fpprofile/fpprofile 103.31.113.109:40000
+        displayName: Run against Test Server
+  - job: Ubuntu_1604_GCC_ARM
+    displayName: "Ubuntu 16.04, GCC, ARM"
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - script: |
+          sudo apt install -y gcc make g++-arm-linux-gnueabi gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi
+        displayName: Install ARM toolchain
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-g++ ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM, EABI'
+        displayName: Validate Binary Architecture
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "Ubuntu_1604_GCC_ARM"
+          publishLocation: "Container"
+  - job: Ubuntu_1604_GCC_ARM64
+    displayName: "Ubuntu 16.04, GCC, ARM64"
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - script: |
+          sudo apt install -y gcc make g++-aarch64-linux-gnu gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+        displayName: Install ARM64 toolchain
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM aarch64'
+        displayName: Validate Binary Architecture
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "Ubuntu_1604_GCC_ARM64"
+          publishLocation: "Container"
 
-- job: Ubuntu_1604_GCC_x86_64
-  displayName: "Ubuntu 16.04, GCC, x86_64"
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1604_GCC_x86_64'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Ubuntu_1604_GCC_x86_64_no80387
-  displayName: "Ubuntu 16.04, GCC, x86_64, -mno-80387"
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_FLAGS=-mno-80387 -DCMAKE_CXX_FLAGS=-mno-80387 ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1604_GCC_x86_64_no80387'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Ubuntu_1604_GCC_ARM
-  displayName: "Ubuntu 16.04, GCC, ARM"
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - script: |
-      sudo apt install -y gcc make g++-arm-linux-gnueabi gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi
-    displayName: Install ARM toolchain
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-g++ ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM, EABI'
-    displayName: Validate Binary Architecture
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1604_GCC_ARM'
-      publishLocation: 'Container'
-- job: Ubuntu_1604_GCC_ARM64
-  displayName: "Ubuntu 16.04, GCC, ARM64"
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - script: |
-      sudo apt install -y gcc make g++-aarch64-linux-gnu gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
-    displayName: Install ARM64 toolchain
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'ARM aarch64'
-    displayName: Validate Binary Architecture
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1604_GCC_ARM64'
-      publishLocation: 'Container'
+  - job: Ubuntu_1604_Clang_x86_64
+    displayName: "Ubuntu 16.04, Clang, x86_64"
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
+        displayName: Validate Binary Architecture
+      - script: |
+          pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "Ubuntu_1604_Clang_x86_64"
+          publishLocation: "Container"
+      - script: |
+          build/fpprofile/fpprofile 103.31.113.109:40000
+        displayName: Run against Test Server
 
-- job: Ubuntu_1604_Clang_x86_64
-  displayName: "Ubuntu 16.04, Clang, x86_64"
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1604_Clang_x86_64'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: Ubuntu_1604_Clang_x86_64_no80387
-  displayName: "Ubuntu 16.04, Clang, x86_64, -mno-80387"
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_FLAGS=-mno-80387 -DCMAKE_CXX_FLAGS=-mno-80387 ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86-64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'Ubuntu_1604_Clang_x86_64_no80387'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
+  # macOS variants
 
-# macOS variants
-
-- job: macOS_1014_Clang_x86_64
-  displayName: "macOS 10.14, Clang, x86_64"
-  pool:
-    vmImage: 'macOS-10.14'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'macOS_1014_Clang_x86_64'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
-- job: macOS_1013_Clang_x86_64
-  displayName: "macOS 10.13, Clang, x86_64"
-  pool:
-    vmImage: 'macOS-10.13'
-  steps:
-  - task: CMake@1
-    inputs:
-      cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
-  - script: |
-      cd build && make
-    displayName: Make
-  - script: |
-      file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
-    displayName: Validate Binary Architecture
-  - script: |
-      pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
-    displayName: Check for x87 FPU instructions
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/build/fpprofile/fpprofile'
-      ArtifactName: 'macOS_1013_Clang_x86_64'
-      publishLocation: 'Container'
-  - script: |
-      build/fpprofile/fpprofile 103.31.113.109:40000
-    displayName: Run against Test Server
+  - job: macOS_1014_Clang_x86_64
+    displayName: "macOS 10.14, Clang, x86_64"
+    pool:
+      vmImage: "macOS-10.14"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
+        displayName: Validate Binary Architecture
+      - script: |
+          pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "macOS_1014_Clang_x86_64"
+          publishLocation: "Container"
+      - script: |
+          build/fpprofile/fpprofile 103.31.113.109:40000
+        displayName: Run against Test Server
+  - job: macOS_1013_Clang_x86_64
+    displayName: "macOS 10.13, Clang, x86_64"
+    pool:
+      vmImage: "macOS-10.13"
+    steps:
+      - task: CMake@1
+        inputs:
+          cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+      - script: |
+          cd build && make
+        displayName: Make
+      - script: |
+          file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
+        displayName: Validate Binary Architecture
+      - script: |
+          pwsh fpcheck\fpcheck.ps1 -Path build/fpprofile/fpprofile
+        displayName: Check for x87 FPU instructions
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/fpprofile"
+          ArtifactName: "macOS_1013_Clang_x86_64"
+          publishLocation: "Container"
+      - script: |
+          build/fpprofile/fpprofile 103.31.113.109:40000
+        displayName: Run against Test Server
