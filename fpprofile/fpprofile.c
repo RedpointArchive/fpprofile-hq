@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 #if defined(ANDROID)
 int fpprofile_log(const char *format, ...)
