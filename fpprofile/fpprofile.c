@@ -33,17 +33,7 @@ int fpprofile_log(const char *format, ...)
 	return 0;
 }
 #else
-int fpprofile_log(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	char buffer[4 * 1024];
-	vsprintf(buffer, format, args);
-	printf("%s", buffer);
-	va_end(args);
-
-	return 0;
-}
+#define fpprofile_log printf
 #endif
 
 #define CONNECT_TOKEN_EXPIRY 30
@@ -190,7 +180,9 @@ Java_games_redpoint_fpprofile_FPProfileTestClient_MainActivity_fpprofileStart(JN
 bool fpprofile_start(int argc, char *argv[])
 #endif
 {
+#if defined(ANDROID)
 	netcode_set_printf_function(&fpprofile_log);
+#endif
 
 	if (netcode_init() != NETCODE_OK)
 	{

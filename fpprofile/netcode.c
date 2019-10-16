@@ -69,7 +69,9 @@
 #define NETCODE_ENABLE_LOGGING 1
 #endif // #ifndef NETCODE_ENABLE_LOGGING
 
-#if defined(ANDROID)
+#if !defined(_MSC_VER)
+#include <sys/time.h>
+
 uint64_t netcode_sys_time()
 {
     struct timeval tm;
