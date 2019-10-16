@@ -372,7 +372,7 @@ jobs:
         inputs:
           cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
       - script: |
-          cd build && make
+          cd build && make VERBOSE=1
         displayName: Make
       - script: |
           file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
@@ -397,7 +397,7 @@ jobs:
         inputs:
           cmakeArgs: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
       - script: |
-          cd build && make
+          cd build && make VERBOSE=1
         displayName: Make
       - script: |
           file build/fpprofile/fpprofile && file build/fpprofile/fpprofile | grep 'x86_64'
