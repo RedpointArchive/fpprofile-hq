@@ -69,7 +69,7 @@ void interrupt_handler(int signal)
 
 #define INSTRUCTION_MAX_OP_NUM 12
 
-#define SEQUENCE_COUNT 1
+#define SEQUENCE_COUNT 10
 #define SEQUENCE_ENTRY_SIZE (sizeof(float) + sizeof(int8_t))
 #define SEQUENCE_SIZE (sizeof(float) + (SEQUENCE_COUNT * SEQUENCE_ENTRY_SIZE) + sizeof(float))
 
