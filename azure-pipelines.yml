@@ -13,6 +13,16 @@ jobs:
     displayName: "Windows 2019, VS 2019, x64"
     pool:
       vmImage: "windows-2019"
+    strategy:
+      matrix:
+        Debug:
+          CONFIGURATION: Debug
+        Release:
+          CONFIGURATION: Release
+        RelWithDebInfo:
+          CONFIGURATION: RelWithDebInfo
+        MinSizeRel:
+          CONFIGURATION: MinSizeRel
     steps:
       - task: CMake@1
         inputs:
@@ -22,22 +32,32 @@ jobs:
           solution: "build/*.sln"
           msbuildArchitecture: "x64"
           platform: "x64"
-          configuration: "RelWithDebInfo"
+          configuration: "$(CONFIGURATION)"
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
-          ArtifactName: "Windows_2019_VS2019_x64"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile.exe"
+          ArtifactName: "Windows_2019_VS2019_x64_$(CONFIGURATION)"
           publishLocation: "Container"
       - script: |
-          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\RelWithDebInfo\fpprofile.exe
+          powershell.exe fpcheck\fpcheck.ps1 -Path build\fpprofile\$(CONFIGURATION)\fpprofile.exe
         displayName: Check for x87 FPU instructions
       - script: |
-          build\fpprofile\RelWithDebInfo\fpprofile.exe 103.31.113.109:40000
+          build\fpprofile\$(CONFIGURATION)\fpprofile.exe 103.31.113.109:40000
         displayName: Run against Test Server
   - job: Windows_2019_VS2019_ARM
     displayName: "Windows 2019, VS 2019, ARM"
     pool:
       vmImage: "windows-2019"
+    strategy:
+      matrix:
+        Debug:
+          CONFIGURATION: Debug
+        Release:
+          CONFIGURATION: Release
+        RelWithDebInfo:
+          CONFIGURATION: RelWithDebInfo
+        MinSizeRel:
+          CONFIGURATION: MinSizeRel
     steps:
       - task: CMake@1
         inputs:
@@ -46,16 +66,26 @@ jobs:
         inputs:
           solution: "build/*.sln"
           platform: "ARM"
-          configuration: "RelWithDebInfo"
+          configuration: "$(CONFIGURATION)"
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
-          ArtifactName: "Windows_2019_VS2019_ARM"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile.exe"
+          ArtifactName: "Windows_2019_VS2019_ARM_$(CONFIGURATION)"
           publishLocation: "Container"
   - job: Windows_2019_VS2019_ARM64
     displayName: "Windows 2019, VS 2019, ARM64"
     pool:
       vmImage: "windows-2019"
+    strategy:
+      matrix:
+        Debug:
+          CONFIGURATION: Debug
+        Release:
+          CONFIGURATION: Release
+        RelWithDebInfo:
+          CONFIGURATION: RelWithDebInfo
+        MinSizeRel:
+          CONFIGURATION: MinSizeRel
     steps:
       - task: CMake@1
         inputs:
@@ -65,11 +95,11 @@ jobs:
           solution: "build/*.sln"
           msbuildArchitecture: "x64"
           platform: "ARM64"
-          configuration: "RelWithDebInfo"
+          configuration: "$(CONFIGURATION)"
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/RelWithDebInfo/fpprofile.exe"
-          ArtifactName: "Windows_2019_VS2019_ARM64"
+          PathtoPublish: "$(Build.SourcesDirectory)/build/fpprofile/$(CONFIGURATION)/fpprofile.exe"
+          ArtifactName: "Windows_2019_VS2019_ARM64_$(CONFIGURATION)"
           publishLocation: "Container"
 
   # Visual Studio 2017 variants
