@@ -14,6 +14,11 @@ function Get-DumpBinPath($Arch = 'x64', $HostArch = 'x64') {
         }
     }
 
+    # Visual Studio 2015
+    if (Test-Path "${env:ProgramFiles(x86)}\Microsoft Visual Studio 14.0\VC\bin\dumpbin.exe") {
+        return "${env:ProgramFiles(x86)}\Microsoft Visual Studio 14.0\VC\bin\dumpbin.exe"
+    }
+
     return $null
 }
 
