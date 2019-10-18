@@ -206,7 +206,7 @@ char* describe_instruction_sequence(char* sequence, int sequence_bytes)
 	{
 		return NULL;
 	}
-	sprintf(str, ": initial: %f\n", initial);
+	sprintf(str, ": initial: %.16f\n", initial);
 
 	for (int i = 0; i < SEQUENCE_COUNT; i++)
 	{
@@ -222,44 +222,44 @@ char* describe_instruction_sequence(char* sequence, int sequence_bytes)
 
 		switch (operation) {
 			case INSTRUCTION_ADD:
-				sprintf(str + strlen(str), ": add %f + %f", chain, next);
+				sprintf(str + strlen(str), ": add %.16f + %.16f", chain, next);
 				break;
 			case INSTRUCTION_SUB:
-				sprintf(str + strlen(str), ": sub %f - %f", chain, next);
+				sprintf(str + strlen(str), ": sub %.16f - %.16f", chain, next);
 				break;
 			case INSTRUCTION_MUL:
-				sprintf(str + strlen(str), ": mul %f * %f", chain, next);
+				sprintf(str + strlen(str), ": mul %.16f * %.16f", chain, next);
 				break;
 			case INSTRUCTION_DIV:
-				sprintf(str + strlen(str), ": div %f / %f", chain, next);
+				sprintf(str + strlen(str), ": div %.16f / %.16f", chain, next);
 				break;
 			case INSTRUCTION_MATHLIB_POW:
-				sprintf(str + strlen(str), ": mathlib pow %f ^ %f", chain, next);
+				sprintf(str + strlen(str), ": mathlib pow %.16f ^ %.16f", chain, next);
 				break;
 			case INSTRUCTION_MATHLIB_SQRT:
-				sprintf(str + strlen(str), ": mathlib sqrt %f", chain);
+				sprintf(str + strlen(str), ": mathlib sqrt %.16f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_TAN:
-				sprintf(str + strlen(str), ": mathlib tan %f", chain);
+				sprintf(str + strlen(str), ": mathlib tan %.16f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_ATAN:
-				sprintf(str + strlen(str), ": mathlib atan %f", chain);
+				sprintf(str + strlen(str), ": mathlib atan %.16f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_COS:
-				sprintf(str + strlen(str), ": mathlib cos %f", chain);
+				sprintf(str + strlen(str), ": mathlib cos %.16f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_ACOS:
-				sprintf(str + strlen(str), ": mathlib acos %f", chain);
+				sprintf(str + strlen(str), ": mathlib acos %.16f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_SIN:
-				sprintf(str + strlen(str), ": mathlib sin %f", chain);
+				sprintf(str + strlen(str), ": mathlib sin %.16f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_ASIN:
-				sprintf(str + strlen(str), ": mathlib asin %f", chain);
+				sprintf(str + strlen(str), ": mathlib asin %.16f", chain);
 				break;
 		}
 
-		sprintf(str + strlen(str), " = (L) %f = (R) %f\n", local_chain, remote_chain);
+		sprintf(str + strlen(str), " = (L) %.16f = (R) %.16f\n", local_chain, remote_chain);
 
 		chain = local_chain;
 	}
@@ -449,7 +449,7 @@ bool fpprofile_step()
 				invalid_sequences++;
 
 				char* desc = describe_instruction_sequence((char*)packet, packet_bytes);
-				fpprofile_log("deterministic floating point sequence failed, got local result %f with remote result %f, sequence: \n%s\n\n", local_result, remote_result, desc);
+				fpprofile_log("deterministic floating point sequence failed, got local result %.16f with remote result %.16f, sequence: \n%s\n\n", local_result, remote_result, desc);
 				if (desc != NULL)
 				{
 					free(desc);
