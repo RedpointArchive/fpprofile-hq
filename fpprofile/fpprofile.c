@@ -70,8 +70,8 @@ void interrupt_handler(int signal)
 #define INSTRUCTION_MAX_OP_NUM 12
 
 #define SEQUENCE_COUNT 10
-#define SEQUENCE_ENTRY_SIZE (sizeof(float) + sizeof(int8_t))
-#define SEQUENCE_SIZE (sizeof(float) + (SEQUENCE_COUNT * SEQUENCE_ENTRY_SIZE) + sizeof(float))
+#define SEQUENCE_ENTRY_SIZE (sizeof(float) + sizeof(float) + sizeof(int8_t))
+#define SEQUENCE_SIZE (sizeof(float) + (SEQUENCE_COUNT * SEQUENCE_ENTRY_SIZE))
 
 int8_t random_operation()
 {
@@ -140,9 +140,9 @@ char *generate_instruction_sequence()
 		memcpy(sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE) + sizeof(int8_t), &next, sizeof(float));
 
 		chain = execute_instruction(chain, next, operation);
-	}
 
-	memcpy(sequence + sizeof(float) + (SEQUENCE_COUNT * SEQUENCE_ENTRY_SIZE), &chain, sizeof(float));
+		memcpy(sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE) + sizeof(float) + sizeof(int8_t), &chain, sizeof(float));
+	}
 
 	return sequence;
 }
@@ -158,24 +158,35 @@ bool verify_instruction_sequence(char *sequence, int sequence_bytes, float *loca
 	memcpy(&initial, sequence, sizeof(float));
 
 	float chain = initial;
+	bool valid = true;
 
 	for (int i = 0; i < SEQUENCE_COUNT; i++)
 	{
 		int8_t operation;
 		float next;
+		float remote_chain;
 
 		memcpy(&operation, sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE), sizeof(int8_t));
 		memcpy(&next, sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE) + sizeof(int8_t), sizeof(float));
+		memcpy(&remote_chain, sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE) + sizeof(float) + sizeof(int8_t), sizeof(float));
 
 		chain = execute_instruction(chain, next, operation);
-	}
 
-	memcpy(remote_result, sequence + sizeof(float) + (SEQUENCE_COUNT * SEQUENCE_ENTRY_SIZE), sizeof(float));
+		// compare bits
+		if (*((uint32_t*)&chain) != *((uint32_t*)&remote_chain))
+		{
+			valid = false;
+		}
+
+		if (i == SEQUENCE_COUNT - 1)
+		{
+			*remote_result = remote_chain;
+		}
+	}
 
 	*local_result = chain;
 
-	// compare the floats at a bit level - make sure they're exactly the same bits
-	return (uint32_t)*local_result == (uint32_t)*remote_result;
+	return valid;
 }
 
 char* describe_instruction_sequence(char* sequence, int sequence_bytes)
@@ -190,69 +201,68 @@ char* describe_instruction_sequence(char* sequence, int sequence_bytes)
 
 	float chain = initial;
 
-	char* str = (char)malloc(2048);
+	char* str = (char*)malloc(2048);
 	if (str == NULL)
 	{
 		return NULL;
 	}
-	sprintf(str, "initial: %f", initial);
+	sprintf(str, ": initial: %f\n", initial);
 
 	for (int i = 0; i < SEQUENCE_COUNT; i++)
 	{
 		int8_t operation;
 		float next;
+		float remote_chain;
 
 		memcpy(&operation, sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE), sizeof(int8_t));
 		memcpy(&next, sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE) + sizeof(int8_t), sizeof(float));
+		memcpy(&remote_chain, sequence + sizeof(float) + (i * SEQUENCE_ENTRY_SIZE) + sizeof(float) + sizeof(int8_t), sizeof(float));
+
+		float local_chain = execute_instruction(chain, next, operation);
 
 		switch (operation) {
 			case INSTRUCTION_ADD:
-				sprintf(str + strlen(str), ", add %f + %f", chain, next);
+				sprintf(str + strlen(str), ": add %f + %f", chain, next);
 				break;
 			case INSTRUCTION_SUB:
-				sprintf(str + strlen(str), ", sub %f - %f", chain, next);
+				sprintf(str + strlen(str), ": sub %f - %f", chain, next);
 				break;
 			case INSTRUCTION_MUL:
-				sprintf(str + strlen(str), ", mul %f * %f", chain, next);
+				sprintf(str + strlen(str), ": mul %f * %f", chain, next);
 				break;
 			case INSTRUCTION_DIV:
-				sprintf(str + strlen(str), ", div %f / %f", chain, next);
+				sprintf(str + strlen(str), ": div %f / %f", chain, next);
 				break;
 			case INSTRUCTION_MATHLIB_POW:
-				sprintf(str + strlen(str), ", mathlib pow %f ^ %f", chain, next);
+				sprintf(str + strlen(str), ": mathlib pow %f ^ %f", chain, next);
 				break;
 			case INSTRUCTION_MATHLIB_SQRT:
-				sprintf(str + strlen(str), ", mathlib sqrt %f", chain);
+				sprintf(str + strlen(str), ": mathlib sqrt %f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_TAN:
-				sprintf(str + strlen(str), ", mathlib tan %f", chain);
+				sprintf(str + strlen(str), ": mathlib tan %f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_ATAN:
-				sprintf(str + strlen(str), ", mathlib atan %f", chain);
+				sprintf(str + strlen(str), ": mathlib atan %f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_COS:
-				sprintf(str + strlen(str), ", mathlib cos %f", chain);
+				sprintf(str + strlen(str), ": mathlib cos %f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_ACOS:
-				sprintf(str + strlen(str), ", mathlib acos %f", chain);
+				sprintf(str + strlen(str), ": mathlib acos %f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_SIN:
-				sprintf(str + strlen(str), ", mathlib sin %f", chain);
+				sprintf(str + strlen(str), ": mathlib sin %f", chain);
 				break;
 			case INSTRUCTION_MATHLIB_ASIN:
-				sprintf(str + strlen(str), ", mathlib asin %f", chain);
+				sprintf(str + strlen(str), ": mathlib asin %f", chain);
 				break;
 		}
 
-		chain = execute_instruction(chain, next, operation);
+		sprintf(str + strlen(str), " = (L) %f = (R) %f\n", local_chain, remote_chain);
 
-		sprintf(str + strlen(str), " = %f", chain);
+		chain = local_chain;
 	}
-
-	float remote_result;
-	memcpy(&remote_result, sequence + sizeof(float) + (SEQUENCE_COUNT * SEQUENCE_ENTRY_SIZE), sizeof(float));
-
-	sprintf(str + strlen(str), ", L %f == R %f ?", chain, remote_result);
 
 	return str;
 }
@@ -439,7 +449,7 @@ bool fpprofile_step()
 				invalid_sequences++;
 
 				char* desc = describe_instruction_sequence((char*)packet, packet_bytes);
-				fpprofile_log("deterministic floating point sequence failed, got local result %f with remote result %f\nsequence: %s\n\n", local_result, remote_result, desc);
+				fpprofile_log("deterministic floating point sequence failed, got local result %f with remote result %f, sequence: \n%s\n\n", local_result, remote_result, desc);
 				if (desc != NULL)
 				{
 					free(desc);
