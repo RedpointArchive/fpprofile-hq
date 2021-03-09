@@ -17,6 +17,7 @@
 #include <memory.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <xmmintrin.h>
 
 #if defined(ANDROID)
 int fpprofile_log(const char *format, ...)
@@ -292,6 +293,18 @@ bool fpprofile_start(int argc, char *argv[])
 	}
 
 	netcode_log_level(NETCODE_LOG_LEVEL_ERROR);
+
+	// CPUID is for wimps:
+	__m128 input = { -997.0f };
+	input = _mm_rcp_ps(input);
+	int platform = (input.m128_u32[0] >> 8) & 0xf;
+	switch (platform)
+	{
+		case 0x0: printf("Intel.\n"); break;
+		case 0x7: printf("AMD Bulldozer.\n"); break;
+		case 0x8: printf("AMD K8, Bobcat, Jaguar.\n"); break;
+		default: printf("Dunno\n"); break;
+	}
 
 	time = 0.0;
 	delta_time = 1.0 / 60.0;
